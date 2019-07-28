@@ -9,9 +9,20 @@ Content-Type: application/json
 //This line have to be non written
 
 {
-    "id":1,
-    "name":"Test Switchboard"
+    "name":"Test Switchboard",
+    "connection":[
+        {
+            "id":1,
+            "label":"A29091" 
+        },
+        {
+            "id":2,
+            "label":"N23201"
+        }
+    ]
 }
+### Delete
+DELETE  http://localhost:3000/element/1
 
 //------------------- Connection Entity -------
 ###Home Request
@@ -32,3 +43,9 @@ Content-Type: application/json
 
 ###Delete Testing Connection
 DELETE http://localhost:3000/connection/1
+
+###Clean up
+
+DELETE http://localhost:3000/connection/1
+
+DELETE http://localhost:3000/connection/

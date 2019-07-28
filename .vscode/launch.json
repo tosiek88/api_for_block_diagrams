@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "attach",
-      "preLaunchTask": "npm run start:debug",
+      //   "preLaunchTask": "npm run start:debug",
       "name": "Attach",
       "port": 9229
     },

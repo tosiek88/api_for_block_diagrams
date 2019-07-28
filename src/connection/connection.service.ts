@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection } from './connection.entity';
-import { Repository, InsertResult } from 'typeorm';
+import { Repository, InsertResult, DeleteResult } from 'typeorm';
 
 @Injectable()
 export class ConnectionService {
@@ -18,7 +18,7 @@ export class ConnectionService {
     const connections: Connection[] = await this.connectionRepository.find();
     return connections;
   }
-  deleteConnection(id: any) {
-    this.connectionRepository.delete(id);
+  async deleteConnection(id: number): Promise<DeleteResult> {
+    return await this.connectionRepository.delete(id);
   }
 }

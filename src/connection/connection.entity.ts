@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
+import { Element } from 'src/element/element/element.entity';
 
 @Entity()
 export class Connection {
@@ -7,4 +14,6 @@ export class Connection {
 
   @Column()
   label: string;
+  @ManyToMany(type => Element, element => element.connection)
+  element?: Element[];
 }
