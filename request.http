@@ -1,0 +1,34 @@
+###Simple request 
+GET http://localhost:3000/element
+
+###Find one element
+GET http://localhost:3000/element/2
+###Simple POST test request
+POST http://localhost:3000/element HTTP/1.1
+Content-Type: application/json
+//This line have to be non written
+
+{
+    "id":1,
+    "name":"Test Switchboard"
+}
+
+//------------------- Connection Entity -------
+###Home Request
+GET http://localhost:3000/connection
+
+###Get all connections
+GET http://localhost:3000/connection/all
+
+### Create Test Connection
+POST http://localhost:3000/connection HTTP/1.1
+Content-Type: application/json
+//This line have to be non written
+
+{
+    "id":"1",
+    "label":"A029131"
+}
+
+###Delete Testing Connection
+DELETE http://localhost:3000/connection/1
