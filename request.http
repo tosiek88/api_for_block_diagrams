@@ -9,7 +9,7 @@ Content-Type: application/json
 //This line have to be non written
 
 {
-    "name":"Test Switchboard",
+    "name":"Test Switchboard 2",
     "connection":[
         {
             "label":"A29091" 
@@ -20,7 +20,7 @@ Content-Type: application/json
     ]
 }
 ###Update 
-PATCH http://localhost:3000/element/11 HTTP/1.1
+PATCH http://localhost:3000/element/16 HTTP/1.1
 Content-Type: application/json
 
 {
@@ -28,7 +28,7 @@ Content-Type: application/json
     "name":"Test Switchboard Update Test"
 }
 ### Delete
-DELETE  http://localhost:3000/element/1
+DELETE  http://localhost:3000/element/16
 
 //------------------- Connection Entity -------
 ###Home Request
