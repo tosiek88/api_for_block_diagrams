@@ -12,14 +12,20 @@ Content-Type: application/json
     "name":"Test Switchboard",
     "connection":[
         {
-            "id":1,
             "label":"A29091" 
         },
         {
-            "id":2,
             "label":"N23201"
         }
     ]
+}
+###Update 
+PATCH http://localhost:3000/element/11 HTTP/1.1
+Content-Type: application/json
+
+{
+    "id":11,
+    "name":"Test Switchboard Update Test"
 }
 ### Delete
 DELETE  http://localhost:3000/element/1
@@ -42,7 +48,7 @@ Content-Type: application/json
 }
 
 ###Delete Testing Connection
-DELETE http://localhost:3000/connection/1
+DELETE http://localhost:3000/connection/
 
 ###Clean up
 
