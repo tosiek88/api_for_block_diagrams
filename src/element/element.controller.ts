@@ -1,6 +1,15 @@
-import { Controller, Get, Param, Post, Body, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import { ElementService } from './element.service';
 import { Element } from './element/element.entity';
+import { identity } from 'rxjs';
 @Controller('element')
 export class ElementController {
   constructor(private readonly elementService: ElementService) {}
@@ -15,8 +24,18 @@ export class ElementController {
   }
 
   @Post()
-  public createUser(@Body() element: Element) {
+  public createElement(@Body() element: Element) {
     return this.elementService.createElement(element);
+  }
+
+  @Patch(':id')
+  public updateElement(@Param() params, @Body() element: Element) {
+    return this.elementService.updateElement(params.id, element);
+  }
+
+  @Patch('/addConnection/:id')
+  public addConnection(@Param() params, @Body() element: Element) {
+    return this.elementService.assignConnectionToElement(params.id, element);
   }
 
   @Delete(':id')

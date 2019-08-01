@@ -5,6 +5,8 @@ import { ElementModule } from './element/element.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConnectionModule } from './connection/connection.module';
 
+import 'reflect-metadata';
+
 @Module({
   imports: [ElementModule, TypeOrmModule.forRoot(), ConnectionModule],
   controllers: [AppController],
