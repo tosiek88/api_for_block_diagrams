@@ -1,11 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ElementService } from './element.service';
-
+import { ElementService } from '../element/element.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Element } from './element/element.entity';
+import { Connection } from '../connection/connection.entity';
 describe('ElementService', () => {
   let service: ElementService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        TypeOrmModule.forRoot(),
+        TypeOrmModule.forFeature([Element, Connection]),
+      ],
       providers: [ElementService],
     }).compile();
 

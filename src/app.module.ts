@@ -12,4 +12,5 @@ import 'reflect-metadata';
   controllers: [AppController],
   providers: [AppService],
 })
+// tslint:disable-next-line:no-console
 export class AppModule {}

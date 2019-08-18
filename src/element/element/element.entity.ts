@@ -5,7 +5,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { Connection } from 'src/connection/connection.entity';
+import { Connection } from '../../connection/connection.entity';
 
 @Entity()
 export class Element {

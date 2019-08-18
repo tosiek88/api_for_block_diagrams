@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, InsertResult, DeleteResult, Entity } from 'typeorm';
 import { Element } from './element/element.entity';
-import { Connection } from 'src/connection/connection.entity';
+import { Connection } from '../connection/connection.entity';
 import { Logger } from '@nestjs/common';
 
 import { plainToClass, plainToClassFromExist } from 'class-transformer';
@@ -38,6 +38,8 @@ export class ElementService {
   async updateElement(id: number, element: Element) {
     // check if Entity is in database
     // make validation of id - can be as Body or Param
+    console.log(2); // ?
+
     if (await this.elementRepository.findOneOrFail(id)) {
       return await this.elementRepository.save(element);
     } else {
