@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConnectionController } from '../connection/connection.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Connection } from './connection.entity';
+import { Connection } from './entity/connection.entity';
 import { ConnectionService } from './connection.service';
 describe('Connection Controller', () => {
   let controller: ConnectionController;

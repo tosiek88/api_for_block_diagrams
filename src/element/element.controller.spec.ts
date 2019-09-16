@@ -3,8 +3,8 @@ import { ElementController } from '../element/element.controller';
 import { ElementModule } from './element.module';
 import { ElementService } from './element.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Connection } from '../connection/connection.entity';
-import { Element } from './element/element.entity';
+import { Connection } from '../connection/entity/connection.entity';
+import { Element } from './entity/element.entity';
 
 describe('Element Controller', () => {
   let controller: ElementController;

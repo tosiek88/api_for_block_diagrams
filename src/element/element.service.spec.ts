@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ElementService } from '../element/element.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Element } from './element/element.entity';
-import { Connection } from '../connection/connection.entity';
+import { Element } from './entity/element.entity';
+import { Connection } from '../connection/entity/connection.entity';
 describe('ElementService', () => {
   let service: ElementService;
 

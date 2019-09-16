@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { ConnectionService } from './connection.service';
-import { Connection } from './connection.entity';
+import { Connection } from './entity/connection.entity';
 
 @Controller('connection')
 export class ConnectionController {

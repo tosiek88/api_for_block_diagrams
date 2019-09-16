@@ -8,7 +8,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { ElementService } from './element.service';
-import { Element } from './element/element.entity';
+import { Element } from './entity/element.entity';
 import { identity } from 'rxjs';
 @Controller('element')
 export class ElementController {
