@@ -16,7 +16,11 @@ export class ElementService {
     private readonly connectionRepository: Repository<Connection>,
   ) {}
   getElement(): string {
-    return 'Element';
+    return 'element';
+  }
+
+  async getAllElement(): Promise<Element[]> {
+    return await this.elementRepository.find();
   }
   async createElement(element: Element): Promise<InsertResult> {
     // arg of function element is a plain object without constructor so need to be transformed
@@ -35,6 +39,17 @@ export class ElementService {
     return new InsertResult();
   }
 
+  async deleteAllElements(): Promise<DeleteResult> {
+    Logger.log(Date.now());
+    const allElements: Element[] = await this.getAllElement();
+    Logger.log(allElements);
+    const idElements: number[] = [];
+    allElements.forEach(element => {
+      idElements.push(element.id);
+    });
+    Logger.log(Date.now());
+    return await this.elementRepository.delete(idElements);
+  }
   async updateElement(id: number, element: Element) {
     // check if Entity is in database
     // make validation of id - can be as Body or Param
@@ -46,19 +61,19 @@ export class ElementService {
   }
 
   async assignConnectionToElement(connection: Connection, element: Element) {
-    const el: Element = await this.getElementA(element.id);
+    const el: Element = await this.getElementAt(element.id);
     // check if connection is already in database
 
     await el.connection.push(connection);
     this.updateElement(el.id, el);
   }
 
-  async getElementA(id: number): Promise<Element> {
+  async getElementAt(id: number): Promise<Element> {
     const element: Element = await this.elementRepository.findOne(id);
     return element;
   }
   async deleteElement(id: number): Promise<Element> {
-    const elementEntity: Element = await this.getElementA(id);
+    const elementEntity: Element = await this.getElementAt(id);
     return await this.elementRepository.remove(elementEntity);
   }
 }

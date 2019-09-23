@@ -20,7 +20,7 @@ export class ElementController {
 
   @Get(':id')
   public getElementA(@Param() params) {
-    return this.elementService.getElementA(params.id);
+    return this.elementService.getElementAt(params.id);
   }
 
   @Post()
@@ -41,5 +41,10 @@ export class ElementController {
   @Delete(':id')
   public deleteElement(@Param() params) {
     this.elementService.deleteElement(params.id);
+  }
+
+  @Delete()
+  public deleteAllElements() {
+    this.elementService.deleteAllElements();
   }
 }

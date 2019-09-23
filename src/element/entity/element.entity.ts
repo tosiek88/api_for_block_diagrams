@@ -15,7 +15,9 @@ export class Element {
   @Column()
   name: string;
 
-  @ManyToMany(type => Connection, connection => connection.element)
+  @ManyToMany(type => Connection, connection => connection.element, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   connection: Connection[];
 }
