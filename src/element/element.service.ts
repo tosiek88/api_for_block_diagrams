@@ -25,6 +25,10 @@ export class ElementService {
   async createElement(element: Element): Promise<InsertResult> {
     // arg of function element is a plain object without constructor so need to be transformed
     // element contain other entity (element) so first convert them (array)
+
+    //check if element exist
+    const el: Element = await this.getElementAt(element.id);
+    Logger.log(el);
     const elementEntity = plainToClass(Element, element);
     elementEntity.connection = plainToClass(
       Connection,
@@ -39,16 +43,9 @@ export class ElementService {
     return new InsertResult();
   }
 
-  async deleteAllElements(): Promise<DeleteResult> {
-    Logger.log(Date.now());
-    const allElements: Element[] = await this.getAllElement();
-    Logger.log(allElements);
-    const idElements: number[] = [];
-    allElements.forEach(element => {
-      idElements.push(element.id);
-    });
-    Logger.log(Date.now());
-    return await this.elementRepository.delete(idElements);
+  async deleteAllElements(): Promise<Element[]> {
+    const allElements: Element[] = await this.elementRepository.find();
+    return await this.elementRepository.remove(allElements);
   }
   async updateElement(id: number, element: Element) {
     // check if Entity is in database
