@@ -16,6 +16,8 @@ export class Connection {
 
   @Column()
   label: string;
-  @ManyToMany(type => Element, element => element.connection)
+  @ManyToMany(type => Element, element => element.connection, {
+    onDelete: 'CASCADE',
+  })
   element?: Element[];
 }
