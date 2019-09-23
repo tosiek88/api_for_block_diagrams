@@ -26,7 +26,7 @@ export class ElementService {
     // arg of function element is a plain object without constructor so need to be transformed
     // element contain other entity (element) so first convert them (array)
 
-    //check if element exist
+    // check if element exist
     const el: Element = await this.getElementAt(element.id);
     Logger.log(el);
     const elementEntity = plainToClass(Element, element);
