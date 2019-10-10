@@ -7,18 +7,17 @@ import {
   Entity,
   RelationQueryBuilder,
 } from 'typeorm';
+import { ElementRepository } from './element.repository';
 import { Element } from './entity/element.entity';
 import { Connection } from '../connection/entity/connection.entity';
-import { Logger } from '@nestjs/common';
 
 import { plainToClass } from 'class-transformer';
-import { resolve } from 'path';
 
 @Injectable()
 export class ElementService {
   constructor(
     @InjectRepository(Element)
-    private readonly elementRepository: Repository<Element>,
+    private readonly elementRepository: ElementRepository,
     @InjectRepository(Connection)
     private readonly connectionRepository: Repository<Connection>,
   ) {}
@@ -33,19 +32,18 @@ export class ElementService {
     // arg of function element is a plain object without constructor so need to be transformed
     // element contain other entity (element) so first convert them (array)
     const elementEntity = plainToClass(Element, element);
-    if (element.connection === null) {
+    if (element.connections === null) {
       return new Promise<Error>((resolve, reject) => {
         throw new Error('Conneciton is null');
       });
     }
-    elementEntity.connection = plainToClass(
+    elementEntity.connections = plainToClass(
       Connection,
-      elementEntity.connection,
+      elementEntity.connections,
     );
-
     // end finally convert object
-    elementEntity.connection = await this.connectionRepository.manager.save(
-      elementEntity.connection,
+    elementEntity.connections = await this.connectionRepository.manager.save(
+      elementEntity.connections,
     );
     return await this.elementRepository.manager.save([elementEntity]);
   }
@@ -74,7 +72,6 @@ export class ElementService {
       },
     });
 
-    console.log(el);
     return true;
   }
 
@@ -82,7 +79,7 @@ export class ElementService {
     const el: Element = await this.getElementAt(element.id);
     // check if connection is already in database
 
-    await el.connection.push(connection);
+    await el.connections.push(connection);
     this.updateElement(el.id, el);
   }
 
