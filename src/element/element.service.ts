@@ -1,17 +1,13 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  Repository,
-  InsertResult,
-  DeleteResult,
-  Entity,
-  RelationQueryBuilder,
-} from 'typeorm';
+import { Repository } from 'typeorm';
 import { ElementRepository } from './element.repository';
 import { Element } from './entity/element.entity';
 import { Connection } from '../connection/entity/connection.entity';
 
 import { plainToClass } from 'class-transformer';
+import ElementDTO from './Element.DTO';
+import ConnectionDTO from '../connection/connection.DTO';
 
 @Injectable()
 export class ElementService {
@@ -28,17 +24,12 @@ export class ElementService {
   async getAllElement(): Promise<Element[]> {
     return await this.elementRepository.find();
   }
-  async createElement(element: Element): Promise<Element[] | Error> {
+  async createElement(element: ElementDTO): Promise<ElementDTO[] | Error> {
     // arg of function element is a plain object without constructor so need to be transformed
     // element contain other entity (element) so first convert them (array)
-    const elementEntity = plainToClass(Element, element);
-    if (element.connections === null) {
-      return new Promise<Error>((resolve, reject) => {
-        throw new Error('Conneciton is null');
-      });
-    }
+    const elementEntity = plainToClass(ElementDTO, element);
     elementEntity.connections = plainToClass(
-      Connection,
+      ConnectionDTO,
       elementEntity.connections,
     );
     // end finally convert object

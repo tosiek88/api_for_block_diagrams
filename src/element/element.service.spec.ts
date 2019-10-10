@@ -2,11 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ElementService } from './element.service';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { Element } from './entity/element.entity';
-import { Repository, InsertResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Connection } from '../connection/entity/connection.entity';
-import { async } from 'rxjs/internal/scheduler/async';
-import { testForBuffer } from 'class-transformer/TransformOperationExecutor';
-import { rejects } from 'assert';
 
 describe('Element Service', () => {
   let service: ElementService;
