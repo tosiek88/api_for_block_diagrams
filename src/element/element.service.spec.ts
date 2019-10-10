@@ -52,12 +52,12 @@ describe('Element Service', () => {
       {
         id: 1,
         name: 'LV Switchboard nb 1',
-        connection: [],
+        connections: [],
       },
       {
         id: 2,
         name: 'LV Switchboard nb 2',
-        connection: [],
+        connections: [],
       },
     ];
     jest
@@ -70,7 +70,7 @@ describe('Element Service', () => {
     const testElement: Element = {
       id: 1,
       name: 'LV Switchboard nb 1',
-      connection: [],
+      connections: [],
     };
 
     jest
@@ -84,7 +84,7 @@ describe('Element Service', () => {
     const testElement: Element = {
       id: 1,
       name: 'LV Switchboard nb 1',
-      connection: null,
+      connections: null,
     };
 
     async function errorProneFunc(): Promise<Error> {
