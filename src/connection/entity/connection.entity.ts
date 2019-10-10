@@ -4,16 +4,20 @@ import {
   Column,
   ManyToMany,
   JoinTable,
+  Unique,
 } from 'typeorm';
-import { Element } from 'src/element/element/element.entity';
+import { Element } from '../../element/entity/element.entity';
 
 @Entity()
+@Unique(['label'])
 export class Connection {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   label: string;
-  @ManyToMany(type => Element, element => element.connection)
+  @ManyToMany(type => Element, element => element.connection, {
+    onDelete: 'CASCADE',
+  })
   element?: Element[];
 }

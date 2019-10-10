@@ -8,8 +8,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { ElementService } from './element.service';
-import { Element } from './element/element.entity';
-import { identity } from 'rxjs';
+import { Element } from './entity/element.entity';
 @Controller('element')
 export class ElementController {
   constructor(private readonly elementService: ElementService) {}
@@ -19,8 +18,8 @@ export class ElementController {
   }
 
   @Get(':id')
-  public getElementA(@Param() params) {
-    return this.elementService.getElementA(params.id);
+  public getElementAt(@Param() params) {
+    return this.elementService.getElementAt(params.id);
   }
 
   @Post()
@@ -41,5 +40,10 @@ export class ElementController {
   @Delete(':id')
   public deleteElement(@Param() params) {
     this.elementService.deleteElement(params.id);
+  }
+
+  @Delete()
+  public deleteAllElements() {
+    this.elementService.deleteAllElements();
   }
 }

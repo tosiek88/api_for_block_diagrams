@@ -5,7 +5,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { Connection } from 'src/connection/connection.entity';
+import { Connection } from '../../connection/entity/connection.entity';
 
 @Entity()
 export class Element {
@@ -15,7 +15,9 @@ export class Element {
   @Column()
   name: string;
 
-  @ManyToMany(type => Connection, connection => connection.element)
+  @ManyToMany(type => Connection, connection => connection.element, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   connection: Connection[];
 }

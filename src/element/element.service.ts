@@ -1,11 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, InsertResult, DeleteResult, Entity } from 'typeorm';
-import { Element } from './element/element.entity';
-import { Connection } from 'src/connection/connection.entity';
+import {
+  Repository,
+  InsertResult,
+  DeleteResult,
+  Entity,
+  RelationQueryBuilder,
+} from 'typeorm';
+import { Element } from './entity/element.entity';
+import { Connection } from '../connection/entity/connection.entity';
 import { Logger } from '@nestjs/common';
 
-import { plainToClass, plainToClassFromExist } from 'class-transformer';
+import { plainToClass } from 'class-transformer';
+import { resolve } from 'path';
 
 @Injectable()
 export class ElementService {
@@ -16,12 +23,21 @@ export class ElementService {
     private readonly connectionRepository: Repository<Connection>,
   ) {}
   getElement(): string {
-    return 'Element';
+    return 'element';
   }
-  async createElement(element: Element): Promise<InsertResult> {
+
+  async getAllElement(): Promise<Element[]> {
+    return await this.elementRepository.find();
+  }
+  async createElement(element: Element): Promise<Element[] | Error> {
     // arg of function element is a plain object without constructor so need to be transformed
     // element contain other entity (element) so first convert them (array)
     const elementEntity = plainToClass(Element, element);
+    if (element.connection === null) {
+      return new Promise<Error>((resolve, reject) => {
+        throw new Error('Conneciton is null');
+      });
+    }
     elementEntity.connection = plainToClass(
       Connection,
       elementEntity.connection,
@@ -31,10 +47,13 @@ export class ElementService {
     elementEntity.connection = await this.connectionRepository.manager.save(
       elementEntity.connection,
     );
-    await this.elementRepository.manager.save([elementEntity]);
-    return new InsertResult();
+    return await this.elementRepository.manager.save([elementEntity]);
   }
 
+  async deleteAllElements(): Promise<Element[]> {
+    const allElements: Element[] = await this.elementRepository.find();
+    return await this.elementRepository.remove(allElements);
+  }
   async updateElement(id: number, element: Element) {
     // check if Entity is in database
     // make validation of id - can be as Body or Param
@@ -45,20 +64,34 @@ export class ElementService {
     }
   }
 
+  private async checkIfExist(
+    element?: Element,
+    name?: string,
+  ): Promise<Element | boolean> {
+    const el: Element = await this.elementRepository.findOne({
+      where: {
+        name,
+      },
+    });
+
+    console.log(el);
+    return true;
+  }
+
   async assignConnectionToElement(connection: Connection, element: Element) {
-    const el: Element = await this.getElementA(element.id);
+    const el: Element = await this.getElementAt(element.id);
     // check if connection is already in database
 
     await el.connection.push(connection);
     this.updateElement(el.id, el);
   }
 
-  async getElementA(id: number): Promise<Element> {
+  async getElementAt(id: number): Promise<Element> {
     const element: Element = await this.elementRepository.findOne(id);
     return element;
   }
   async deleteElement(id: number): Promise<Element> {
-    const elementEntity: Element = await this.getElementA(id);
+    const elementEntity: Element = await this.getElementAt(id);
     return await this.elementRepository.remove(elementEntity);
   }
 }

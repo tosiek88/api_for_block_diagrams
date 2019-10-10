@@ -1,7 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection } from './connection.entity';
-import { Repository, InsertResult, DeleteResult } from 'typeorm';
+import { Connection } from './entity/connection.entity';
+import {
+  Repository,
+  InsertResult,
+  DeleteResult,
+  FindConditions,
+} from 'typeorm';
 
 @Injectable()
 export class ConnectionService {
@@ -20,5 +25,11 @@ export class ConnectionService {
   }
   async deleteConnection(id: number): Promise<DeleteResult> {
     return await this.connectionRepository.delete(id);
+  }
+
+  async deleteConnections(): Promise<Connection[]> {
+    const allConnections: Connection[] = await this.connectionRepository.find();
+    Logger.log(allConnections);
+    return await this.connectionRepository.remove(allConnections);
   }
 }

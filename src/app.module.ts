@@ -8,8 +8,15 @@ import { ConnectionModule } from './connection/connection.module';
 import 'reflect-metadata';
 
 @Module({
-  imports: [ElementModule, TypeOrmModule.forRoot(), ConnectionModule],
+  imports: [
+    ElementModule,
+    TypeOrmModule.forRoot({
+      keepConnectionAlive: true,
+    }),
+    ConnectionModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
+// tslint:disable-next-line:no-console
 export class AppModule {}

@@ -1,0 +1,5 @@
+Tests:
+-Add new element to database and check if exist;
+-Add new eleement to databese and remove then check if exist
+-Add new few elements and find with specified conditions
+-Add new 

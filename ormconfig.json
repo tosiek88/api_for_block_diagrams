@@ -6,5 +6,6 @@
   "password": "fallen88",
   "database": "wilpride_electric_signals",
   "entities": ["src/**/**.entity{.ts,.js}"],
-  "synchronize": true
+  "synchronize": true,
+  "keepConnectionAlive": true
 }
