@@ -1,11 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, InsertResult, DeleteResult, Entity } from 'typeorm';
+import {
+  Repository,
+  InsertResult,
+  DeleteResult,
+  Entity,
+  RelationQueryBuilder,
+} from 'typeorm';
 import { Element } from './entity/element.entity';
 import { Connection } from '../connection/entity/connection.entity';
 import { Logger } from '@nestjs/common';
 
-import { plainToClass, plainToClassFromExist } from 'class-transformer';
+import { plainToClass } from 'class-transformer';
+import { resolve } from 'path';
 
 @Injectable()
 export class ElementService {
@@ -22,14 +29,15 @@ export class ElementService {
   async getAllElement(): Promise<Element[]> {
     return await this.elementRepository.find();
   }
-  async createElement(element: Element): Promise<InsertResult> {
+  async createElement(element: Element): Promise<Element[] | Error> {
     // arg of function element is a plain object without constructor so need to be transformed
     // element contain other entity (element) so first convert them (array)
-
-    // check if element exist
-    const el: Element = await this.getElementAt(element.id);
-    Logger.log(el);
     const elementEntity = plainToClass(Element, element);
+    if (element.connection === null) {
+      return new Promise<Error>((resolve, reject) => {
+        throw new Error('Conneciton is null');
+      });
+    }
     elementEntity.connection = plainToClass(
       Connection,
       elementEntity.connection,
@@ -39,8 +47,7 @@ export class ElementService {
     elementEntity.connection = await this.connectionRepository.manager.save(
       elementEntity.connection,
     );
-    await this.elementRepository.manager.save([elementEntity]);
-    return new InsertResult();
+    return await this.elementRepository.manager.save([elementEntity]);
   }
 
   async deleteAllElements(): Promise<Element[]> {
@@ -55,6 +62,20 @@ export class ElementService {
     } else {
       return false;
     }
+  }
+
+  private async checkIfExist(
+    element?: Element,
+    name?: string,
+  ): Promise<Element | boolean> {
+    const el: Element = await this.elementRepository.findOne({
+      where: {
+        name,
+      },
+    });
+
+    console.log(el);
+    return true;
   }
 
   async assignConnectionToElement(connection: Connection, element: Element) {

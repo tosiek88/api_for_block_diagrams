@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { ElementService } from './element.service';
 import { Element } from './entity/element.entity';
-import { identity } from 'rxjs';
 @Controller('element')
 export class ElementController {
   constructor(private readonly elementService: ElementService) {}
@@ -19,7 +18,7 @@ export class ElementController {
   }
 
   @Get(':id')
-  public getElementA(@Param() params) {
+  public getElementAt(@Param() params) {
     return this.elementService.getElementAt(params.id);
   }
 
