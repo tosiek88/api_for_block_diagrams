@@ -1,18 +1,68 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ElementService } from './element.service';
+import { ElementService } from '../element.service';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { Element } from './entity/element.entity';
+import { Element } from '../entity/element.entity';
 import { Repository } from 'typeorm';
-import { Connection } from '../connection/entity/connection.entity';
-import { ElementRepository } from './element.repository';
-import ElementDTO from './Element.DTO';
+import { Connection } from '../../connection/entity/connection.entity';
+import { ElementRepository } from '../element.repository';
+import ElementDTO from '../Element.DTO';
 
-describe('Element Service', () => {
+describe('Getting Elements', () => {
+  let service: ElementService;
+  let repoElement: ElementRepository;
+  beforeAll(async () => {
+    // tslint:disable-next-line: no-console
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        TypeOrmModule.forRoot({
+          keepConnectionAlive: true,
+        }),
+        TypeOrmModule.forFeature([Element, Connection]),
+      ],
+      providers: [
+        ElementService,
+        {
+          // https://github.com/nestjs/nest/issues/1229
+          provide: `${getRepositoryToken(ElementRepository)}Repository`,
+          useClass: ElementRepository,
+        },
+        {
+          provide: `${getRepositoryToken(Connection)}Reposiotry`,
+          useClass: Repository,
+        },
+      ],
+    }).compile();
+    service = module.get<ElementService>(ElementService);
+
+    repoElement = module.get<ElementRepository>(ElementRepository);
+  });
+
+  it('should return for getAllElement', async () => {
+    const testElement: Element[] = [
+      {
+        id: 1,
+        name: 'LV Switchboard nb 1',
+        connections: [],
+      },
+      {
+        id: 2,
+        name: 'LV Switchboard nb 2',
+        connections: [],
+      },
+    ];
+    jest
+      .spyOn(repoElement, 'find')
+      .mockResolvedValue(Promise.resolve<Element[]>(testElement));
+
+    expect(await service.getAllElement()).toEqual(testElement);
+  });
+});
+describe('Create element', () => {
   let service: ElementService;
   let repoElement: ElementRepository;
   let repoConnection: Repository<Connection>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     // tslint:disable-next-line: no-console
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -41,29 +91,7 @@ describe('Element Service', () => {
       getRepositoryToken(Connection),
     );
   });
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
 
-  it('should return for getAllElement', async () => {
-    const testElement: Element[] = [
-      {
-        id: 1,
-        name: 'LV Switchboard nb 1',
-        connections: [],
-      },
-      {
-        id: 2,
-        name: 'LV Switchboard nb 2',
-        connections: [],
-      },
-    ];
-    jest
-      .spyOn(repoElement, 'find')
-      .mockResolvedValue(Promise.resolve<Element[]>(testElement));
-
-    expect(await service.getAllElement()).toEqual(testElement);
-  });
   it('should create an Element', async () => {
     const testElement: ElementDTO = {
       name: 'LV Switchboard nb 1',
