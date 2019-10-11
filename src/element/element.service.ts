@@ -24,19 +24,14 @@ export class ElementService {
   async getAllElement(): Promise<Element[]> {
     return await this.elementRepository.find();
   }
-  async createElement(element: ElementDTO): Promise<ElementDTO[] | Error> {
+  async createElement(element: ElementDTO): Promise<ElementDTO | Error> {
     // arg of function element is a plain object without constructor so need to be transformed
     // element contain other entity (element) so first convert them (array)
-    const elementEntity = plainToClass(ElementDTO, element);
-    elementEntity.connections = plainToClass(
-      ConnectionDTO,
-      elementEntity.connections,
-    );
-    // end finally convert object
-    elementEntity.connections = await this.connectionRepository.manager.save(
-      elementEntity.connections,
-    );
-    return await this.elementRepository.manager.save([elementEntity]);
+    try {
+      return await this.elementRepository.createElement(element);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async deleteAllElements(): Promise<Element[]> {
