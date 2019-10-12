@@ -4,15 +4,14 @@ import { Repository } from 'typeorm';
 import { Element } from './entity/element.entity';
 import { Connection } from '../connection/entity/connection.entity';
 
-import { plainToClass } from 'class-transformer';
 import ElementDTO from './Element.DTO';
 import ConnectionDTO from '../connection/connection.DTO';
-import CustomRepo from './element.repository';
+import ElementRepo from './element.repository';
 
 @Injectable()
 export class ElementService {
   constructor(
-    private readonly elementRepository: CustomRepo,
+    private readonly elementRepository: ElementRepo,
     @InjectRepository(Connection)
     private readonly connectionRepository: Repository<Connection>,
   ) {}
@@ -38,9 +37,6 @@ export class ElementService {
     return await this.elementRepository.remove(allElements);
   }
 
-  testRepoFunc() {
-    return this.elementRepository.testFunc();
-  }
   async updateElement(id: number, element: Element) {
     // check if Entity is in database
     // make validation of id - can be as Body or Param

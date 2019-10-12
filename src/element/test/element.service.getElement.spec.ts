@@ -1,14 +1,14 @@
 import { Element } from './../entity/element.entity';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { ElementService } from '../element.service';
-import CustomRepo from '../element.repository';
+import ElementRepo from '../element.repository';
 import { TestingModule, Test } from '@nestjs/testing';
 import { Connection } from '../../connection/entity/connection.entity';
 import { Repository } from 'typeorm';
 
 describe('Getting Elements', () => {
   let service: ElementService;
-  let repoElement: CustomRepo;
+  let repoElement: ElementRepo;
   beforeAll(async () => {
     // tslint:disable-next-line: no-console
     const module: TestingModule = await Test.createTestingModule({
@@ -22,8 +22,8 @@ describe('Getting Elements', () => {
         ElementService,
         {
           // https://github.com/nestjs/nest/issues/1229
-          provide: CustomRepo,
-          useClass: CustomRepo,
+          provide: ElementRepo,
+          useClass: ElementRepo,
         },
         {
           provide: `${getRepositoryToken(Connection)}Reposiotry`,
@@ -32,7 +32,7 @@ describe('Getting Elements', () => {
       ],
     }).compile();
     service = module.get<ElementService>(ElementService);
-    repoElement = module.get<CustomRepo>(CustomRepo);
+    repoElement = module.get<ElementRepo>(ElementRepo);
   });
 
   it('should return for getAllElement', async () => {

@@ -2,10 +2,9 @@ import { Connection } from '../connection/entity/connection.entity';
 import { Element } from './entity/element.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import ElementDTO from './Element.DTO';
-import { Injectable } from '@nestjs/common';
 
 @EntityRepository(Element)
-export default class CustomRepo extends Repository<Element> {
+export default class ElementRepo extends Repository<Element> {
   constructor() {
     super();
   }
