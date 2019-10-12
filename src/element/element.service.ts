@@ -25,11 +25,7 @@ export class ElementService {
   async createElement(element: ElementDTO): Promise<ElementDTO | Error> {
     // arg of function element is a plain object without constructor so need to be transformed
     // element contain other entity (element) so first convert them (array)
-    try {
-      return await this.elementRepository.createElement(element);
-    } catch (error) {
-      throw new Error(error);
-    }
+    return await this.elementRepository.createElement(element);
   }
 
   async deleteAllElements(): Promise<Element[]> {

@@ -21,9 +21,6 @@ export default class ElementRepo extends Repository<Element> {
 
       elementEntity.connections.push(tempConn);
     });
-    elementEntity.connections = await this.manager.save(
-      elementEntity.connections,
-    );
     try {
       await this.save([elementEntity]);
 
