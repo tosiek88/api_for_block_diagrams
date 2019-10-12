@@ -1,19 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ElementRepository } from './element.repository';
 import { Element } from './entity/element.entity';
 import { Connection } from '../connection/entity/connection.entity';
 
 import { plainToClass } from 'class-transformer';
 import ElementDTO from './Element.DTO';
 import ConnectionDTO from '../connection/connection.DTO';
+import CustomRepo from './element.repository';
 
 @Injectable()
 export class ElementService {
   constructor(
-    @InjectRepository(Element)
-    private readonly elementRepository: ElementRepository,
+    private readonly elementRepository: CustomRepo,
     @InjectRepository(Connection)
     private readonly connectionRepository: Repository<Connection>,
   ) {}
@@ -37,6 +36,10 @@ export class ElementService {
   async deleteAllElements(): Promise<Element[]> {
     const allElements: Element[] = await this.elementRepository.find();
     return await this.elementRepository.remove(allElements);
+  }
+
+  testRepoFunc() {
+    return this.elementRepository.testFunc();
   }
   async updateElement(id: number, element: Element) {
     // check if Entity is in database

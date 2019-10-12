@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
     "name":"Test Switchboard 2",
-    "connection":[
+    "connections":[
         {
             "label":"A29091" 
         },

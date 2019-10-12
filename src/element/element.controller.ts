@@ -1,3 +1,4 @@
+import ElementDTO from '../element/Element.DTO';
 import {
   Controller,
   Get,
@@ -23,7 +24,7 @@ export class ElementController {
   }
 
   @Post()
-  public createElement(@Body() element: Element) {
+  public createElement(@Body() element: ElementDTO) {
     return this.elementService.createElement(element);
   }
 

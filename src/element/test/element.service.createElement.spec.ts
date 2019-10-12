@@ -4,66 +4,17 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { Element } from '../entity/element.entity';
 import { Repository } from 'typeorm';
 import { Connection } from '../../connection/entity/connection.entity';
-import { ElementRepository } from '../element.repository';
 import ElementDTO from '../Element.DTO';
+import CustomRepo from '../element.repository';
+import { debug, isFunction } from 'util';
+import { exportSpecifier } from '@babel/types';
 
-describe('Getting Elements', () => {
-  let service: ElementService;
-  let repoElement: ElementRepository;
-  beforeAll(async () => {
-    // tslint:disable-next-line: no-console
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot({
-          keepConnectionAlive: true,
-        }),
-        TypeOrmModule.forFeature([Element, Connection]),
-      ],
-      providers: [
-        ElementService,
-        {
-          // https://github.com/nestjs/nest/issues/1229
-          provide: `${getRepositoryToken(ElementRepository)}Repository`,
-          useClass: ElementRepository,
-        },
-        {
-          provide: `${getRepositoryToken(Connection)}Reposiotry`,
-          useClass: Repository,
-        },
-      ],
-    }).compile();
-    service = module.get<ElementService>(ElementService);
-
-    repoElement = module.get<ElementRepository>(ElementRepository);
-  });
-
-  it('should return for getAllElement', async () => {
-    const testElement: Element[] = [
-      {
-        id: 1,
-        name: 'LV Switchboard nb 1',
-        connections: [],
-      },
-      {
-        id: 2,
-        name: 'LV Switchboard nb 2',
-        connections: [],
-      },
-    ];
-    jest
-      .spyOn(repoElement, 'find')
-      .mockResolvedValue(Promise.resolve<Element[]>(testElement));
-
-    expect(await service.getAllElement()).toEqual(testElement);
-  });
-});
 describe('Create element', () => {
   let service: ElementService;
-  let repoElement: ElementRepository;
+  let repoElement: CustomRepo;
   let repoConnection: Repository<Connection>;
 
   beforeAll(async () => {
-    // tslint:disable-next-line: no-console
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
@@ -75,18 +26,18 @@ describe('Create element', () => {
         ElementService,
         {
           // https://github.com/nestjs/nest/issues/1229
-          provide: `${getRepositoryToken(ElementRepository)}Repository`,
-          useClass: ElementRepository,
+          provide: CustomRepo,
+          useClass: CustomRepo,
         },
         {
-          provide: `${getRepositoryToken(Connection)}Reposiotry`,
+          provide: `${getRepositoryToken(Connection)}Repository`,
           useClass: Repository,
         },
       ],
     }).compile();
-    service = module.get<ElementService>(ElementService);
 
-    repoElement = module.get<ElementRepository>(ElementRepository);
+    service = module.get<ElementService>(ElementService);
+    repoElement = module.get<CustomRepo>(CustomRepo);
     repoConnection = module.get<Repository<Connection>>(
       getRepositoryToken(Connection),
     );
@@ -98,7 +49,9 @@ describe('Create element', () => {
       connections: [{ id: 1, label: 'test' }],
     };
 
-    repoElement.createElement = jest.fn().mockReturnValue(testElement);
+    jest
+      .spyOn(repoElement, 'createElement')
+      .mockResolvedValue(Promise.resolve<ElementDTO>(testElement));
     expect(await service.createElement(testElement)).toEqual(testElement);
   });
 
@@ -110,23 +63,5 @@ describe('Create element', () => {
       throw new Error('Exception');
     });
     expect(service.createElement(testElementDTO)).rejects.toThrow();
-  });
-
-  it('should return Exception if Element is not valid', async () => {
-    const testElement: ElementDTO = {
-      id: 1,
-      name: 'LV Switchboard nb 1',
-      connections: null,
-    };
-
-    async function errorProneFunc(): Promise<Error> {
-      return new Promise<Error>((resolve, reject) => {
-        throw new Error('Connection i null');
-      });
-    }
-    jest
-      .spyOn(repoElement.manager, 'save')
-      .mockResolvedValue(Promise.resolve<ElementDTO[]>([testElement]));
-    await expect(errorProneFunc()).rejects.toThrow();
   });
 });
