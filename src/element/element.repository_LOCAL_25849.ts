@@ -26,7 +26,12 @@ export default class ElementRepo extends Repository<Element> {
     } else {
       elementDTO.connections = [];
     }
-    await this.save([elementEntity]);
-    return elementDTO;
+    try {
+      await this.save([elementEntity]);
+
+      return elementDTO;
+    } catch (err) {
+      throw new Error('Cannot save Entity');
+    }
   }
 }

@@ -13,20 +13,20 @@ export default class ElementRepo extends Repository<Element> {
     const elementEntity = new Element();
     elementEntity.name = elementDTO.name;
     elementEntity.connections = [];
+    elementDTO.connections.forEach(it => {
+      const tempConn: Connection = new Connection();
+      tempConn.id = it.id;
+      tempConn.label = it.label;
+      tempConn.elements = [];
 
-    if (elementDTO.connections !== undefined) {
-      elementDTO.connections.forEach(it => {
-        const tempConn: Connection = new Connection();
-        tempConn.id = it.id;
-        tempConn.label = it.label;
-        tempConn.elements = [];
+      elementEntity.connections.push(tempConn);
+    });
+    try {
+      await this.save([elementEntity]);
 
-        elementEntity.connections.push(tempConn);
-      });
-    } else {
-      elementDTO.connections = [];
+      return elementDTO;
+    } catch (err) {
+      throw new Error('Cannot save Entity');
     }
-    await this.save([elementEntity]);
-    return elementDTO;
   }
 }

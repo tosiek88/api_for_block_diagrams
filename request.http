@@ -3,6 +3,26 @@ GET http://localhost:3000/element
 
 ###Find one element
 GET http://localhost:3000/element/1
+
+###Simple POST test request should return Bad Request from pipes
+
+POST http://localhost:3000/element HTTP/1.1
+Content-Type: application/json
+//This line have to be non written
+
+{
+    "name":"Test 2"
+}
+###Simple POST test request should return Bad Request from pipes
+
+POST http://localhost:3000/element HTTP/1.1
+Content-Type: application/json
+//This line have to be non written
+
+{
+    "name":"Test",
+    "connections":[]
+}
 ###Simple POST test request
 POST http://localhost:3000/element HTTP/1.1
 Content-Type: application/json

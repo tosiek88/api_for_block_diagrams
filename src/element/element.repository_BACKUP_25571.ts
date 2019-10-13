@@ -14,6 +14,7 @@ export default class ElementRepo extends Repository<Element> {
     elementEntity.name = elementDTO.name;
     elementEntity.connections = [];
 
+<<<<<<< HEAD
     if (elementDTO.connections !== undefined) {
       elementDTO.connections.forEach(it => {
         const tempConn: Connection = new Connection();
@@ -26,7 +27,14 @@ export default class ElementRepo extends Repository<Element> {
     } else {
       elementDTO.connections = [];
     }
+    try {
+      await this.save([elementEntity]);
+=======
+      elementEntity.connections.push(tempConn);
+    });
     await this.save([elementEntity]);
+>>>>>>> New request for testing purpose
+
     return elementDTO;
   }
 }
