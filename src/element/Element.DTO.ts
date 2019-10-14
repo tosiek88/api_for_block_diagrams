@@ -1,5 +1,5 @@
 import ConnectionDTO from '../connection/connection.DTO';
-//Stash test
+// Stash test
 export default class ElementDTO {
   id?: number;
   name: string;
