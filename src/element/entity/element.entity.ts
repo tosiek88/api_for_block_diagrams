@@ -4,10 +4,12 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
+  Unique,
 } from 'typeorm';
 import { Connection } from '../../connection/entity/connection.entity';
 
 @Entity()
+@Unique(['name'])
 export class Element {
   @PrimaryGeneratedColumn()
   id: number;
