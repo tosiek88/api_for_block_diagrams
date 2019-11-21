@@ -1,3 +1,11 @@
 {
-"python.pythonPath": "/usr/bin/python2.7"
+  "vim.statusBarColorControl": true,
+  "vim.statusBarColors.normal": ["#8FBCBB", "#434C5E"],
+  "vim.statusBarColors.insert": "#BF616A",
+  "vim.statusBarColors.visual": ["#B48EAD", "#434C5E"],
+
+  "vim.statusBarColors.visualline": ["#B48EAD", "#434C5E"],
+  "vim.statusBarColors.visualblock": "#A3BE8C",
+  "vim.statusBarColors.replace": "#D08770",
+  "python.pythonPath": "/home/tocha/develop/venv/test/bin/python"
 }
