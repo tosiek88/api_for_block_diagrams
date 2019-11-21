@@ -1,11 +1,27 @@
-{
-  "type": "mysql",
-  "host": "localhost",
-  "port": 3306,
-  "username": "tocha",
-  "password": "fallen88",
-  "database": "wilpride_electric_signals",
-  "entities": ["src/**/**.entity{.ts,.js}"],
-  "synchronize": true,
-  "keepConnectionAlive": true
-}
+[
+  {
+    "name": "default",
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "tocha",
+    "password": "fallen88",
+    "database": "wilpride_electric_signals",
+    "entities": ["src/**/**.entity{.ts,.js}"],
+    "synchronize": true,
+    "keepConnectionAlive": true
+  },
+  {
+    "name": "test",
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "tocha",
+    "password": "fallen88",
+    "database": "wilpride_electric_signals_test",
+    "dropSchema": true,
+    "entities": ["src/**/**.entity{.ts,.js}"],
+    "synchronize": true,
+    "keepConnectionAlive": true
+  }
+]
