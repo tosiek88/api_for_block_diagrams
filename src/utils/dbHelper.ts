@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as data from '../../ormconfig.json';
+import * as sampleData from '../utils/test_database.json';
 export function dbConnectionOptions(dbName: string): TypeOrmModuleOptions {
   const DATABASE = data.find(e => e.name === dbName);
   if (DATABASE === undefined) {
@@ -9,4 +10,9 @@ export function dbConnectionOptions(dbName: string): TypeOrmModuleOptions {
     DATABASE.name = '';
     return DATABASE as TypeOrmModuleOptions;
   }
+}
+
+export function getSampleData() {
+  const obj = sampleData;
+  Logger.log(sampleData);
 }
