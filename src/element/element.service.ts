@@ -5,16 +5,11 @@ import { Element } from './entity/element.entity';
 import { Connection } from '../connection/entity/connection.entity';
 
 import ElementDTO from './Element.DTO';
-import ConnectionDTO from '../connection/connection.DTO';
 import ElementRepo from './element.repository';
 
 @Injectable()
 export class ElementService {
-  constructor(
-    private readonly elementRepository: ElementRepo,
-    @InjectRepository(Connection)
-    private readonly connectionRepository: Repository<Connection>,
-  ) {}
+  constructor(private readonly elementRepository: ElementRepo) {}
   getElement(): string {
     return 'element';
   }

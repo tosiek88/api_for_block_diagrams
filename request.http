@@ -1,5 +1,8 @@
+
+@PORT=4000
+@PORT2={{$dotenv PORT}}
 ###Simple request 
-GET http://localhost:3000/element
+GET http://localhost:{{PORT2}/element
 
 ###Find one element
 GET http://localhost:3000/element/1
