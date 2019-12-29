@@ -1,0 +1,11 @@
+[
+  {
+<<<<<<< Updated upstream
+    //only testing stash and hotfix git
+=======
+>>>>>>> Stashed changes
+    "name": "LV Switchboard nb 2",
+    "id": 1,
+    "connections": []
+  }
+]
