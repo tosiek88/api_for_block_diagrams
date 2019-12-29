@@ -12,8 +12,7 @@ import * as request from 'supertest';
 import { dbConnectionOptions } from '../../utils/return-connection-db-options';
 describe('Element', () => {
   let app: INestApplication;
-  const elementService = { getElement: () => 'element' };
-
+  let elementService: ElementService;
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -27,7 +26,11 @@ describe('Element', () => {
 
     app = module.createNestApplication();
     await app.init();
+
+    elementService = module.get<ElementService>(ElementService);
   });
+
+  it('Check if Service Element will work', () => {});
 
   it(`/GET elements`, () => {
     return request(app.getHttpServer())
