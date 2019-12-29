@@ -10,7 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Logger } from '@nestjs/common';
 import * as request from 'supertest';
-import { dbConnectionOptions } from '../../utils/return-connection-db-options';
+import { dbConnectionOptions } from './../../utils/dbHelper';
 import { EntityManager } from 'typeorm';
 
 const DATABASE = dbConnectionOptions(process.env.NODE_ENV);
