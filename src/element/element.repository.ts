@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { Connection } from '../connection/entity/connection.entity';
 import { Element } from './entity/element.entity';
 import { EntityRepository, Repository } from 'typeorm';
@@ -26,7 +27,8 @@ export default class ElementRepo extends Repository<Element> {
     } else {
       elementDTO.connections = [];
     }
-    await this.save([elementEntity]);
+
+    const result = await this.save([elementEntity]);
     return elementDTO;
   }
 }
