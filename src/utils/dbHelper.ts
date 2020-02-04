@@ -1,7 +1,7 @@
-import { Logger } from '@nestjs/common';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as data from '../../ormconfig.json';
 import * as sampleData from '../utils/test_database.json';
+
 export function dbConnectionOptions(dbName: string): TypeOrmModuleOptions {
   const DATABASE = data.find(e => e.name === dbName);
   if (DATABASE === undefined) {
@@ -12,7 +12,12 @@ export function dbConnectionOptions(dbName: string): TypeOrmModuleOptions {
   }
 }
 
+<<<<<<< Updated upstream
 export function getSampleData() {
   const obj = sampleData;
   Logger.log(sampleData);
+=======
+export function getSampleData(): object {
+  return sampleData;
+>>>>>>> Stashed changes
 }
