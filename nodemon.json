@@ -2,5 +2,10 @@
   "watch": ["src"],
   "ext": "ts",
   "ignore": ["src/**/*.spec.ts"],
+  "env":{
+    "NODE_ENV":"dev",
+    "NODE_CONFIG_DIR":"./",
+    "DATABASE_NAME":"wilpride_electric_signals"
+  },
   "exec": "ts-node -r tsconfig-paths/register src/main.ts"
 }
