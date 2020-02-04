@@ -13,11 +13,6 @@ export function dbConnectionOptions(dbName: string): TypeOrmModuleOptions {
     }
 }
 
-<<<<<<< HEAD
-export function getSampleData(): object {
-  const obj = sampleData;
-  return sampleData;
-=======
 export function getSampleData(): ElementDTO {
     Logger.log(sampleData);
     const {id, name, connections} = sampleData[0];
@@ -26,5 +21,4 @@ export function getSampleData(): ElementDTO {
     obj.name = name;
     obj.connections = connections;
     return obj;
->>>>>>> master
 }
