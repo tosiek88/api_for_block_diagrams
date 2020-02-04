@@ -16,47 +16,49 @@ import { EntityManager } from 'typeorm';
 const DATABASE = dbConnectionOptions(process.env.NODE_ENV);
 const DATABASE_NAME = process.env.DATABASE_NAME;
 describe('Element', () => {
-  let app: INestApplication;
-  let elementService: ElementService;
-  let elementRepository: ElementRepo;
-  beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot(DATABASE),
-        TypeOrmModule.forFeature([Element, ElementRepo]),
-        TypeOrmModule.forFeature([Connection]),
-      ],
-      controllers: [ElementController],
-      providers: [ElementService],
-    }).compile();
+    let app: INestApplication;
+    Logger.log(DATABASE);
+    let elementService: ElementService;
+    let elementRepository: ElementRepo;
+    beforeAll(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            imports: [
+                TypeOrmModule.forRoot(DATABASE),
+                TypeOrmModule.forFeature([Element, ElementRepo]),
+                TypeOrmModule.forFeature([Connection]),
+            ],
+            controllers: [ElementController],
+            providers: [ElementService],
+        }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+        app = module.createNestApplication();
+        await app.init();
 
-    elementService = module.get<ElementService>(ElementService);
-    elementRepository = module.get<ElementRepo>(ElementRepo);
-  });
+        elementService = module.get<ElementService>(ElementService);
+        elementRepository = module.get<ElementRepo>(ElementRepo);
+    });
 
-  const cleanDatabase = async () => {
-    // DROP DATABASE to have fresh start for next tests
-    let result = await elementRepository.query(
-      `DROP DATABASE ${DATABASE_NAME}`,
-    );
-    Logger.log(result, `DROP DATABASE`);
-    result = await elementRepository.query(`CREATE DATABASE ${DATABASE_NAME}`);
+    const cleanDatabase = async () => {
+        // DROP DATABASE to have fresh start for next tests
+        let result = await elementRepository.query(
+            `DROP DATABASE ${DATABASE_NAME}`,
+        );
+        Logger.log(result, `DROP DATABASE`);
+        result = await elementRepository.query(`CREATE DATABASE ${DATABASE_NAME}`);
 
-    Logger.log(result, `--------END---------`);
-    // close all connection after tests;
-    await app.close();
-  };
+        Logger.log(result, `--------END---------`);
+        // close all connection after tests;
+        await app.close();
+    };
 
-  afterAll(cleanDatabase);
+    afterAll(cleanDatabase);
 
-  it('Check if Service Element will work', async () => {
-    expect(elementService).toBeDefined();
-    expect(elementRepository).toBeDefined();
-    Logger.log(`ACT`, 'Test of createElement');
+    it('Check if Service Element will work', async () => {
+        expect(elementService).toBeDefined();
+        expect(elementRepository).toBeDefined();
+        Logger.log(`ACT`, 'Test of createElement');
 
+<<<<<<< Updated upstream
     const elementDTO: ElementDTO = new ElementDTO();
     elementDTO.id = 1;
     elementDTO.connections = [];
@@ -66,10 +68,20 @@ describe('Element', () => {
     const elements: Element[] = await elementService.getAllElement();
     expect(elements.length).toBeGreaterThan(0);
   });
+=======
+        let elementDTO: ElementDTO = new ElementDTO();
+        elementDTO = getSampleData() as ElementDTO;
+        Logger.log(elementDTO);
+        const result = await elementService.createElement(elementDTO[0]);
+        Logger.log(result, 'Test of elementService.createElement');
+        const elements: Element[] = await elementService.getAllElement();
+        expect(elements.length).toBeGreaterThan(0);
+    });
+>>>>>>> Stashed changes
 
-  it(`/GET elements`, () => {
-    return request(app.getHttpServer())
-      .get('/element')
-      .expect(200);
-  });
+    it(`/GET elements`, () => {
+        return request(app.getHttpServer())
+            .get('/element')
+            .expect(200);
+    });
 });
