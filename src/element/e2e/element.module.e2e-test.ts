@@ -10,7 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Logger } from '@nestjs/common';
 import * as request from 'supertest';
-import { dbConnectionOptions } from '../../utils/return-connection-db-options';
+import { dbConnectionOptions, getSampleData } from './../../utils/dbHelper';
 import { EntityManager } from 'typeorm';
 
 const DATABASE = dbConnectionOptions(process.env.NODE_ENV);
@@ -58,26 +58,14 @@ describe('Element', () => {
         expect(elementRepository).toBeDefined();
         Logger.log(`ACT`, 'Test of createElement');
 
-<<<<<<< Updated upstream
-    const elementDTO: ElementDTO = new ElementDTO();
-    elementDTO.id = 1;
-    elementDTO.connections = [];
-    elementDTO.name = 'LV Switchboard nb 1';
-    const result = await elementService.createElement(elementDTO);
-    Logger.log(result, 'Test of elementService.createElement');
-    const elements: Element[] = await elementService.getAllElement();
-    expect(elements.length).toBeGreaterThan(0);
-  });
-=======
         let elementDTO: ElementDTO = new ElementDTO();
-        elementDTO = getSampleData() as ElementDTO;
+        elementDTO = getSampleData(); //TODO have to use automapper
         Logger.log(elementDTO);
-        const result = await elementService.createElement(elementDTO[0]);
+        const result = await elementService.createElement(elementDTO);
         Logger.log(result, 'Test of elementService.createElement');
         const elements: Element[] = await elementService.getAllElement();
         expect(elements.length).toBeGreaterThan(0);
     });
->>>>>>> Stashed changes
 
     it(`/GET elements`, () => {
         return request(app.getHttpServer())
