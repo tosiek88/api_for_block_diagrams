@@ -6,20 +6,21 @@ import { ElementController } from './../element.controller';
 
 import { Connection } from './../../connection/entity/connection.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import 'dotenv/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Logger } from '@nestjs/common';
 import * as request from 'supertest';
-import { dbConnectionOptions, getSampleData } from './../../utils/dbHelper';
-import { EntityManager } from 'typeorm';
+import { dbConnectionOptions, getSampleData, cleanDatabase } from './../../utils/dbHelper';
+import { async } from 'rxjs/internal/scheduler/async';
 
 const DATABASE = dbConnectionOptions(process.env.NODE_ENV);
 const DATABASE_NAME = process.env.DATABASE_NAME;
 describe('Element', () => {
+    Logger.log(`E2E Test against database: ${process.env.DATABASE_NAME}`);
     let app: INestApplication;
-    Logger.log(DATABASE);
     let elementService: ElementService;
     let elementRepository: ElementRepo;
+
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [
@@ -38,32 +39,23 @@ describe('Element', () => {
         elementRepository = module.get<ElementRepo>(ElementRepo);
     });
 
-    const cleanDatabase = async () => {
-        // DROP DATABASE to have fresh start for next tests
-        let result = await elementRepository.query(
-            `DROP DATABASE ${DATABASE_NAME}`,
-        );
-        Logger.log(result, `DROP DATABASE`);
-        result = await elementRepository.query(`CREATE DATABASE ${DATABASE_NAME}`);
+    it('Check if Service Element is defined', async () => {
 
-        Logger.log(result, `--------END---------`);
-        // close all connection after tests;
-        await app.close();
-    };
+        expect(elementService).toBeDefined();
+    });
 
-    afterAll(cleanDatabase);
+    it('Check if Repository Element is defined', async () => {
+
+        expect(elementRepository).toBeDefined();
+    });
 
     it('Check if Service Element will work', async () => {
-        expect(elementService).toBeDefined();
-        expect(elementRepository).toBeDefined();
-        Logger.log(`ACT`, 'Test of createElement');
-
-        let elementDTO: ElementDTO = new ElementDTO();
-        elementDTO = getSampleData(); //TODO have to use automapper
-        Logger.log(elementDTO);
-        const result = await elementService.createElement(elementDTO);
-        Logger.log(result, 'Test of elementService.createElement');
+        // arrange
+        const elementDTO: ElementDTO[] = getSampleData();
+        // act
+        await elementService.createElement( elementDTO[0]);
         const elements: Element[] = await elementService.getAllElement();
+        // test
         expect(elements.length).toBeGreaterThan(0);
     });
 
@@ -71,5 +63,10 @@ describe('Element', () => {
         return request(app.getHttpServer())
             .get('/element')
             .expect(200);
+    });
+
+    afterAll( async () => {
+        await cleanDatabase<Element>(elementRepository, DATABASE_NAME);
+        await app.close();
     });
 });

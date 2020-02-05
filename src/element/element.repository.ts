@@ -28,8 +28,7 @@ export default class ElementRepo extends Repository<Element> {
 
         }
 
-        const dbResult = await this.save([elementEntity]);
-        Logger.log(dbResult);
+        await this.save([elementEntity]);
         return elementDTO;
     }
 }
