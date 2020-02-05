@@ -1,13 +1,18 @@
 {
   "defaultSeverity": "error",
-  "extends": ["tslint:recommended"],
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-prettier"
+  ],
   "jsRules": {
     "no-unused-expression": true
   },
   "rules": {
     "quotemark": [true, "single"],
     "member-access": [false],
-    "ordered-imports": [false],
+    "ordered-imports": [true, {
+      "import-sources-order":"any"
+    }],
     "max-line-length": [true, 150],
     "member-ordering": [false],
     "interface-name": [false],

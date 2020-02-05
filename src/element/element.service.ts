@@ -1,11 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Element } from './entity/element.entity';
+import { Injectable } from '@nestjs/common';
 import { Connection } from '../connection/entity/connection.entity';
-
 import ElementDTO from './Element.DTO';
 import ElementRepo from './element.repository';
+import { Element } from './entity/element.entity';
 
 @Injectable()
 export class ElementService {
@@ -38,11 +35,8 @@ export class ElementService {
     }
   }
 
-  private async checkIfExist(
-    element?: Element,
-    name?: string,
-  ): Promise<Element | boolean> {
-    const el: Element = await this.elementRepository.findOne({
+  private async checkIfExist(name?: string): Promise<Element | boolean> {
+    await this.elementRepository.findOne({
       where: {
         name,
       },
