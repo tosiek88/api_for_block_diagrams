@@ -8,9 +8,14 @@ import {
   Delete,
   Patch,
   Logger,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { ElementService } from './element.service';
 import { Element } from './entity/element.entity';
+import { restElement } from '@babel/types';
+
 @Controller('element')
 export class ElementController {
   constructor(private readonly elementService: ElementService) {}
@@ -20,8 +25,12 @@ export class ElementController {
   }
 
   @Get(':id')
-  public getElementAt(@Param() params) {
-    return this.elementService.getElementAt(params.id);
+  public async getElementAt(@Res() res: Response, @Param() params) {
+    const result = await this.elementService.getElementAt(params.id);
+    if (result === undefined) {
+      return res.status(HttpStatus.NO_CONTENT).send();
+    }
+    return res.status(HttpStatus.OK).json(result);
   }
 
   @Post()

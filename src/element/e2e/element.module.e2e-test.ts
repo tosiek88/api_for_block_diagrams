@@ -63,7 +63,7 @@ describe('Element', () => {
   it(`/GET elements`, async () => {
     const data = await elementService.getAllElement();
     const plainData = classToPlain(data);
-    return request(app.getHttpServer())
+    return await request(app.getHttpServer())
       .get('/element')
       .expect(plainData)
       .expect(200);
@@ -72,11 +72,21 @@ describe('Element', () => {
   it(`/GET element id=1`, async () => {
     const data = await elementService.getElementAt(1);
     const plainData = classToPlain(data);
-    return request(app.getHttpServer())
+    return await request(app.getHttpServer())
       .get('/element/1')
       .expect(plainData)
       .expect(200);
   });
+
+  it(`/GET element id=0 should return 204 NO CONTENT due element id=0 is not exist`, async () => {
+    const req = await request(app.getHttpServer())
+      .get('/element/0')
+      .expect(204)
+      .expect({});
+    Logger.log(req);
+    return req;
+  });
+
   afterAll(async () => {
     await cleanDatabase<Element>(
       elementRepository,
