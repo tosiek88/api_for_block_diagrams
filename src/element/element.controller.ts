@@ -7,6 +7,7 @@ import {
   Body,
   Delete,
   Patch,
+  Logger,
 } from '@nestjs/common';
 import { ElementService } from './element.service';
 import { Element } from './entity/element.entity';
@@ -14,8 +15,8 @@ import { Element } from './entity/element.entity';
 export class ElementController {
   constructor(private readonly elementService: ElementService) {}
   @Get()
-  public getElement(): string {
-    return this.elementService.getElement();
+  public async getElement(): Promise<Element[]> {
+    return await this.elementService.getAllElement();
   }
 
   @Get(':id')

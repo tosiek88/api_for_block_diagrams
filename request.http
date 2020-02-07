@@ -1,11 +1,13 @@
-
+##For VSCode Variables
 @PORT=4000
 @PORT2={{$dotenv PORT}}
+###For Doom Emacs Rest Client Variables
+:PORT=3000
 ###Simple request 
 GET http://localhost:{{PORT2}/element
 
-###Find one element
-GET http://localhost:3000/element/1
+###Find all elements
+GET http://localhost::PORT/element
 
 ###Simple POST test request should return Bad Request from pipes
 
@@ -56,7 +58,7 @@ DELETE  http://localhost:3000/element/2
 ### Delete all
 DELETE   http://localhost:3000/element/
 
-//------------------- Connection Entity -------
+//--------------Connection Entity -------
 ###Home Request
 GET http://localhost:3000/connection
 

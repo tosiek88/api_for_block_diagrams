@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Connection } from '../connection/entity/connection.entity';
 import ElementDTO from './Element.DTO';
 import ElementRepo from './element.repository';
@@ -12,7 +12,8 @@ export class ElementService {
   }
 
   async getAllElement(): Promise<Element[]> {
-    return await this.elementRepository.find();
+    const result = await this.elementRepository.find();
+    return result;
   }
   async createElement(element: ElementDTO): Promise<ElementDTO | Error> {
     // arg of function element is a plain object without constructor so need to be transformed
