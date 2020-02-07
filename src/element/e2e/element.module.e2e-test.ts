@@ -16,6 +16,7 @@ import {
   getSampleData,
 } from './../../utils/dbHelper';
 import * as sampleData from './test_database.json';
+import { async } from 'rxjs/internal/scheduler/async';
 const DATABASE = dbConnectionOptions(process.env.ORM_CONFIG_NAME);
 
 describe('Element', () => {
@@ -24,6 +25,7 @@ describe('Element', () => {
   let elementService: ElementService;
   let elementRepository: ElementRepo;
 
+  //TODO metadata can be stored somewhere else
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -67,6 +69,14 @@ describe('Element', () => {
       .expect(200);
   });
 
+  it(`/GET element id=1`, async () => {
+    const data = await elementService.getElementAt(1);
+    const plainData = classToPlain(data);
+    return request(app.getHttpServer())
+      .get('/element/1')
+      .expect(plainData)
+      .expect(200);
+  });
   afterAll(async () => {
     await cleanDatabase<Element>(
       elementRepository,

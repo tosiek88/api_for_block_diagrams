@@ -3,7 +3,7 @@ import { Connection } from '../connection/entity/connection.entity';
 import ElementDTO from './Element.DTO';
 import ElementRepo from './element.repository';
 import { Element } from './entity/element.entity';
-
+//TODO Create custom PIPE to map returned Element to plainObject
 @Injectable()
 export class ElementService {
   constructor(private readonly elementRepository: ElementRepo) {}
