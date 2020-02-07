@@ -83,7 +83,6 @@ describe('Element', () => {
       .get('/element/0')
       .expect(204)
       .expect({});
-    Logger.log(req);
     return req;
   });
 
@@ -92,7 +91,6 @@ describe('Element', () => {
       elementRepository,
       DATABASE.database.toString(),
     );
-    // Logger.log(DATABASE.database.toString(), `CLEANING`);
     await app.close();
   });
 });
