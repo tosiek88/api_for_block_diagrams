@@ -129,5 +129,21 @@ describe(`Element POST TEST`, () => {
 
   it('Database should be empty', async () => {
     const elements: ElementDTO[] = await elementService.getAllElement();
+    expect(elements.length).toEqual(0);
+  });
+
+  it('Should insert a one Element without relations', async () => {
+    // Arrange
+    const elementDTO: ElementDTO = {
+      name: 'Test Element',
+      connections: [],
+    };
+    // ACT
+    await elementService.createElement(elementDTO);
+    const element: Element[] = await elementService.getAllElement();
+
+    // Test
+    expect(element).toBeInstanceOf(Array);
+    expect(element[0].name).toEqual(elementDTO.name);
   });
 });
