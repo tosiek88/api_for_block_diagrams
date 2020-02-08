@@ -17,10 +17,14 @@ export class Element {
   @Column()
   name: string;
 
-  @ManyToMany(type => Connection, connection => connection.elements, {
-    onDelete: 'CASCADE',
-    cascade: true,
-  })
+  @ManyToMany(
+    type => Connection,
+    connection => connection.elements,
+    {
+      onDelete: 'CASCADE',
+      cascade: true,
+    },
+  )
   @JoinTable()
-  connections?: Connection[];
+  connections: Connection[];
 }
