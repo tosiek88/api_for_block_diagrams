@@ -51,7 +51,6 @@ describe('Element Get TEST', () => {
   });
 
   it('Should check if inserted data are in tested database ', async () => {
-    // arrange
     // act
     const elements: Element[] = await elementService.getAllElement();
     // test
