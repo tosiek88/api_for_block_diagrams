@@ -191,4 +191,34 @@ describe(`Element POST TEST`, () => {
         expect(res.body).toEqual(classToPlain(elements));
       });
   });
+
+  it('POST should create element with relations', async () => {
+    await elementRepository.manager.connection.synchronize(true);
+    const elementDTO: ElementDTO[] = [
+      {
+        name: 'Test Element 2',
+        connections: [
+          {
+            label: 'Axxxxx',
+          },
+          {
+            label: 'Nxxxxx',
+          },
+        ],
+      },
+      {
+        name: 'Test Element 1',
+        connections: [],
+      },
+    ];
+
+    await request(app.getHttpServer())
+      .post('/element')
+      .send(elementDTO)
+      .expect(201)
+      .then(async res => {
+        const elements = await elementService.getAllElement();
+        expect(res.body).toEqual(classToPlain(elements));
+      });
+  });
 });
