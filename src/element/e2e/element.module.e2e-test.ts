@@ -147,10 +147,12 @@ describe(`Element POST TEST`, () => {
   });
 
   it('POST should create element and return in body ', async () => {
-    const elementDTO: ElementDTO = {
-      name: 'Test Element 2',
-      connections: [],
-    };
+    const elementDTO: ElementDTO[] = [
+      {
+        name: 'Test Element 2',
+        connections: [],
+      },
+    ];
 
     const req = await request(app.getHttpServer())
       .post('/element')

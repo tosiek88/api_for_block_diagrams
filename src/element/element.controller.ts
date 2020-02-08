@@ -35,8 +35,8 @@ export class ElementController {
   }
 
   @Post()
-  public async createElement(@Body() element: ElementDTO) {
-    return await this.elementService.createElement(element);
+  public async createElement(@Body() elements: ElementDTO[]) {
+    return await this.elementService.createElements(elements);
   }
 
   @Patch(':id')
