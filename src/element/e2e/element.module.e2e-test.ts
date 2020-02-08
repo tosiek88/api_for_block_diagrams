@@ -11,7 +11,6 @@ import ElementRepo from './../element.repository';
 import { ElementService } from './../element.service';
 import { Element } from './../entity/element.entity';
 import * as sampleData from './test_database.json';
-
 require('custom-env').env('test');
 
 const DATABASE = dbConnectionOptions(process.env.ORM_CONFIG_NAME);
@@ -37,7 +36,6 @@ describe('Element Get TEST', () => {
 
     elementService = module.get<ElementService>(ElementService);
     elementRepository = module.get<ElementRepo>(ElementRepo);
-
     elementsDTO = getSampleData(sampleData);
     await elementService.createElements(elementsDTO);
   });
@@ -59,7 +57,7 @@ describe('Element Get TEST', () => {
   });
 
   it('Should return object with realtions', async () => {
-    //act
+    // act
     const data = await elementService.getAllElement();
     //test
     expect(data).toBeDefined();
@@ -154,7 +152,7 @@ describe(`Element POST TEST`, () => {
       },
     ];
 
-    const req = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post('/element')
       .send(elementDTO)
       .expect(201)
@@ -165,11 +163,12 @@ describe(`Element POST TEST`, () => {
         });
         expect(res.body).toEqual([element]);
       });
-    //Clean
-    await elementRepository.manager.connection.synchronize(true);
+    // Clean
+    //
   });
 
   it('POST should create multiple elements', async () => {
+    await elementRepository.manager.connection.synchronize(true);
     const elementDTO: ElementDTO[] = [
       {
         name: 'Test Element 2',
@@ -181,7 +180,7 @@ describe(`Element POST TEST`, () => {
       },
     ];
 
-    const req = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post('/element')
       .send(elementDTO)
       .expect(201)
