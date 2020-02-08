@@ -27,7 +27,8 @@ export default class ElementRepo extends Repository<Element> {
     // });
 
     elementEntity = automapper.map('ElementDTO', 'Element', elementDTO);
-    await this.save([elementEntity]);
+    const entity = await this.save([elementEntity]);
+    elementDTO.id = entity[0].id;
     return elementDTO;
   }
 }
