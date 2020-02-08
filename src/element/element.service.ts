@@ -13,6 +13,9 @@ export class ElementService {
 
   async getAllElement(): Promise<Element[]> {
     const result = await this.elementRepository.find({
+      order: {
+        id: 'ASC',
+      },
       relations: ['connections'],
     }); // TODO should return ElementDTO[]
     return result;

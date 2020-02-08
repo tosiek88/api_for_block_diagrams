@@ -64,9 +64,9 @@ describe('Element Get TEST', () => {
     //test
     expect(data).toBeDefined();
     expect(data).toBeInstanceOf(Array);
-    expect(data[0]).toBeInstanceOf(Element);
-    expect(data[0].connections).toBeInstanceOf(Array);
-    expect(data[0].connections[0]).toBeInstanceOf(Connection);
+    expect(data[1]).toBeInstanceOf(Element);
+    expect(data[1].connections).toBeInstanceOf(Array);
+    expect(data[1].connections[0]).toBeInstanceOf(Connection);
   });
 
   it(`/GET elements`, async () => {
