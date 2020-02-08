@@ -20,6 +20,8 @@
     "password": "fallen88",
     "database": "wilpride_electric_signals_test",
     "dropSchema": true,
+    "retryAttempts":2,
+    "retryDelay":1000,
     "entities": ["src/**/**.entity{.ts,.js}"],
     "synchronize": true,
     "keepConnectionAlive": true
