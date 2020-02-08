@@ -28,9 +28,10 @@ export class ElementController {
   public async getElementAt(@Res() res: Response, @Param() params) {
     const result = await this.elementService.getElementAt(params.id);
     if (result === undefined) {
-      return res.status(HttpStatus.NO_CONTENT).send();
+      return await res.status(HttpStatus.NO_CONTENT).send();
+    } else {
+      return await res.status(HttpStatus.OK).json(result);
     }
-    return res.status(HttpStatus.OK).json(result);
   }
 
   @Post()
