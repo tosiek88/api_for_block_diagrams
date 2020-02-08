@@ -146,4 +146,23 @@ describe(`Element POST TEST`, () => {
     expect(element).toBeInstanceOf(Array);
     expect(element[0].name).toEqual(elementDTO.name);
   });
+
+  it('POST should create element and return in body ', async () => {
+    const elementDTO: ElementDTO = {
+      name: 'Test Element 2',
+      connections: [],
+    };
+
+    const req = await request(app.getHttpServer())
+      .post('/element')
+      .send(elementDTO)
+      .expect(201)
+      .then(async res => {
+        const element = await elementRepository.findOne({
+          where: { name: elementDTO.name },
+          relations: ['connections'],
+        });
+        expect(res.body).toEqual(element);
+      });
+  });
 });
