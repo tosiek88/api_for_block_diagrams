@@ -3,5 +3,17 @@
     "name": "LV Switchboard nb 2",
     "id": 1,
     "connections": []
+  },
+
+  {
+    "name": "LV Switchboard nb 1",
+    "id": 2,
+      "connections": [
+
+          {"id":1, "label":"A29102"},
+          {"id":2, "label":"N2321"}
+      ]
   }
+
+
 ]
