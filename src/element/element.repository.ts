@@ -15,7 +15,6 @@ export default class ElementRepo extends Repository<Element> {
       .createMap('ConnectionDTO', 'Connection')
       .forAllMembers((dest: any, destProp: string, value: any): void => {
         dest[destProp] = value;
-        Logger.log(`${dest[destProp]}`, `AutoMapper`);
       });
 
     automapper
