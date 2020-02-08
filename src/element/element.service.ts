@@ -12,13 +12,25 @@ export class ElementService {
   }
 
   async getAllElement(): Promise<Element[]> {
-    const result = await this.elementRepository.find();
+    const result = await this.elementRepository.find({
+      relations: ['connections'],
+    }); // TODO should return ElementDTO[]
     return result;
   }
   async createElement(element: ElementDTO): Promise<ElementDTO | Error> {
     // arg of function element is a plain object without constructor so need to be transformed
     // element contain other entity (element) so first convert them (array)
     return await this.elementRepository.createElement(element);
+  }
+
+  async createElements(
+    elementsDTO: ElementDTO[],
+  ): Promise<ElementDTO[] | Error> {
+    const returnDTO: ElementDTO[] = [];
+    for (const key in elementsDTO) {
+      returnDTO.push(await this.createElement(elementsDTO[key]));
+    }
+    return await returnDTO;
   }
 
   async deleteAllElements(): Promise<Element[]> {
