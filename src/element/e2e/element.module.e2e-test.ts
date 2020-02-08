@@ -160,10 +160,35 @@ describe(`Element POST TEST`, () => {
       .expect(201)
       .then(async res => {
         const element = await elementRepository.findOne({
-          where: { name: elementDTO.name },
+          where: { name: elementDTO[0].name },
           relations: ['connections'],
         });
-        expect(res.body).toEqual(element);
+        expect(res.body).toEqual([element]);
+      });
+    //Clean
+    await elementRepository.manager.connection.synchronize(true);
+  });
+
+  it('POST should create multiple elements', async () => {
+    const elementDTO: ElementDTO[] = [
+      {
+        name: 'Test Element 2',
+        connections: [],
+      },
+      {
+        name: 'Test Element 1',
+        connections: [],
+      },
+    ];
+
+    const req = await request(app.getHttpServer())
+      .post('/element')
+      .send(elementDTO)
+      .expect(201)
+
+      .then(async res => {
+        const elements = await elementService.getAllElement();
+        expect(res.body).toEqual(classToPlain(elements));
       });
   });
 });
