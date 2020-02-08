@@ -4,11 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { classToPlain } from 'class-transformer';
 import * as request from 'supertest';
 import { Connection } from './../../connection/entity/connection.entity';
-import {
-  cleanDatabase,
-  dbConnectionOptions,
-  getSampleData,
-} from './../../utils/dbHelper';
+import { dbConnectionOptions, getSampleData } from './../../utils/dbHelper';
 import { ElementController } from './../element.controller';
 import ElementDTO from './../Element.DTO';
 import ElementRepo from './../element.repository';
@@ -20,8 +16,96 @@ require('custom-env').env('test');
 
 const DATABASE = dbConnectionOptions(process.env.ORM_CONFIG_NAME);
 
-describe('Element', () => {
-  Logger.log(`E2E Test against database: ${DATABASE.database}`);
+describe('Element Get TEST', () => {
+  let app: INestApplication;
+  let elementService: ElementService;
+  let elementRepository: ElementRepo;
+  let elementsDTO: ElementDTO[];
+
+  // TODO metadata can be stored somewhere else
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        TypeOrmModule.forRoot(DATABASE),
+        TypeOrmModule.forFeature([Element, ElementRepo, Connection]),
+      ],
+      controllers: [ElementController],
+      providers: [ElementService],
+    }).compile();
+    app = await module.createNestApplication();
+    await app.init();
+
+    elementService = module.get<ElementService>(ElementService);
+    elementRepository = module.get<ElementRepo>(ElementRepo);
+
+    elementsDTO = getSampleData(sampleData);
+    await elementService.createElements(elementsDTO);
+  });
+
+  it('Check if Service Element is defined', async () => {
+    expect(elementService).toBeDefined();
+  });
+
+  it('Check if Repository Element is defined', async () => {
+    expect(elementRepository).toBeDefined();
+  });
+
+  it('Should check if inserted data are in tested database ', async () => {
+    // arrange
+    // act
+    const elements: Element[] = await elementService.getAllElement();
+    // test
+    expect(elements.length).toBeGreaterThan(0);
+    expect(elementsDTO.length).toEqual(elements.length);
+  });
+
+  it('Should return object with realtions', async () => {
+    //act
+    const data = await elementService.getAllElement();
+    //test
+    expect(data).toBeDefined();
+    expect(data).toBeInstanceOf(Array);
+    expect(data[0]).toBeInstanceOf(Element);
+    expect(data[0].connections).toBeInstanceOf(Array);
+    expect(data[0].connections[0]).toBeInstanceOf(Connection);
+  });
+
+  it(`/GET elements`, async () => {
+    const data = await elementService.getAllElement();
+    const plainData = classToPlain(data);
+    return await request(app.getHttpServer())
+      .get('/element')
+      .expect(plainData)
+      .expect(200);
+  });
+
+  //TODO Test for getAllElement to check if return Connection
+
+  it(`/GET element id=1 should return 200 HttpStatus ok - element id=1 exist`, async () => {
+    // Act
+    const data = await elementService.getElementAt(1);
+    const plainData = classToPlain(data);
+    // Test
+    await request(app.getHttpServer())
+      .get('/element/1')
+      .expect(plainData)
+      .expect(200);
+  });
+
+  it(`/GET element id=0 should return 204 NO CONTENT due element id=0 is not exist`, async () => {
+    await request(app.getHttpServer())
+      .get('/element/0')
+      .expect(204)
+      .expect({});
+  });
+
+  afterAll(async () => {
+    await elementRepository.manager.connection.synchronize(true);
+    await app.close();
+  });
+});
+
+describe(`Element POST TEST`, () => {
   let app: INestApplication;
   let elementService: ElementService;
   let elementRepository: ElementRepo;
@@ -36,62 +120,14 @@ describe('Element', () => {
       controllers: [ElementController],
       providers: [ElementService],
     }).compile();
-    app = module.createNestApplication();
+    app = await module.createNestApplication();
     await app.init();
 
     elementService = module.get<ElementService>(ElementService);
     elementRepository = module.get<ElementRepo>(ElementRepo);
   });
 
-  it('Check if Service Element is defined', async () => {
-    expect(elementService).toBeDefined();
-  });
-
-  it('Check if Repository Element is defined', async () => {
-    expect(elementRepository).toBeDefined();
-  });
-
-  it('Check if Service Element will work', async () => {
-    // arrange
-    const elementDTO: ElementDTO[] = getSampleData(sampleData);
-    // act
-    await elementService.createElement(elementDTO[0]);
-    const elements: Element[] = await elementService.getAllElement();
-    // test
-    expect(elements.length).toBeGreaterThan(0);
-  });
-
-  it(`/GET elements`, async () => {
-    const data = await elementService.getAllElement();
-    const plainData = classToPlain(data);
-    return await request(app.getHttpServer())
-      .get('/element')
-      .expect(plainData)
-      .expect(200);
-  });
-
-  it(`/GET element id=1`, async () => {
-    const data = await elementService.getElementAt(1);
-    const plainData = classToPlain(data);
-    return await request(app.getHttpServer())
-      .get('/element/1')
-      .expect(plainData)
-      .expect(200);
-  });
-
-  it(`/GET element id=0 should return 204 NO CONTENT due element id=0 is not exist`, async () => {
-    const req = await request(app.getHttpServer())
-      .get('/element/0')
-      .expect(204)
-      .expect({});
-    return req;
-  });
-
-  afterAll(async () => {
-    await cleanDatabase<Element>(
-      elementRepository,
-      DATABASE.database.toString(),
-    );
-    await app.close();
+  it('Database should be empty', async () => {
+    const elements: ElementDTO[] = await elementService.getAllElement();
   });
 });
