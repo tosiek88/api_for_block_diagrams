@@ -11,6 +11,7 @@ import ElementRepo from './../element.repository';
 import { ElementService } from './../element.service';
 import { Element } from './../entity/element.entity';
 import * as sampleData from './test_database.json';
+import { get } from 'http';
 require('custom-env').env('test');
 
 const DATABASE = dbConnectionOptions(process.env.ORM_CONFIG_NAME);
@@ -33,7 +34,6 @@ describe('Element Get TEST', () => {
     }).compile();
     app = await module.createNestApplication();
     await app.init();
-
     elementService = module.get<ElementService>(ElementService);
     elementRepository = module.get<ElementRepo>(ElementRepo);
     elementsDTO = getSampleData(sampleData);
@@ -59,6 +59,7 @@ describe('Element Get TEST', () => {
   it('Should return object with realtions', async () => {
     // act
     const data = await elementService.getAllElement();
+
     //test
     expect(data).toBeDefined();
     expect(data).toBeInstanceOf(Array);
@@ -163,8 +164,6 @@ describe(`Element POST TEST`, () => {
         });
         expect(res.body).toEqual([element]);
       });
-    // Clean
-    //
   });
 
   it('POST should create multiple elements', async () => {
@@ -218,6 +217,32 @@ describe(`Element POST TEST`, () => {
       .then(async res => {
         const elements = await elementService.getAllElement();
         expect(res.body).toEqual(classToPlain(elements));
+      });
+  });
+
+  it('POST fail if inserted object will exist in database', async () => {
+    await elementRepository.manager.connection.synchronize(true);
+
+    const elementDTO: ElementDTO[] = [
+      {
+        name: 'Test Element 1',
+        connections: [],
+      },
+      {
+        name: 'Test Element 1',
+        connections: [],
+      },
+    ];
+
+    const req = await request(app.getHttpServer())
+      .post('/element')
+      .send(elementDTO)
+      .expect(201)
+      .then(async res => {
+        const element = await elementService.getAllElement();
+        expect(res.body[0]).toEqual(classToPlain(element[0]));
+        expect(res.body[1].message).toBeDefined();
+        expect(res.body[1].name).toEqual('ER_DUP_ENTRY'); // DUPLICATE ENTRY
       });
   });
 });

@@ -9,7 +9,9 @@ export default class ElementRepo extends Repository<Element> {
   constructor() {
     super();
   }
-  public async createElement(elementDTO: ElementDTO): Promise<ElementDTO> {
+  public async createElement(
+    elementDTO: ElementDTO,
+  ): Promise<ElementDTO | Error> {
     let elementEntity = new Element();
     automapper
       .createMap('ConnectionDTO', 'Connection')
@@ -27,8 +29,17 @@ export default class ElementRepo extends Repository<Element> {
     // });
 
     elementEntity = automapper.map('ElementDTO', 'Element', elementDTO);
-    const entity = await this.save([elementEntity]);
-    elementDTO.id = entity[0].id;
-    return elementDTO;
+
+    try {
+      const entity = await this.save([elementEntity]);
+      elementDTO.id = entity[0].id;
+      return elementDTO;
+    } catch (err) {
+      const error: Error = {
+        message: err.sqlMessage,
+        name: err.code,
+      };
+      return error;
+    }
   }
 }

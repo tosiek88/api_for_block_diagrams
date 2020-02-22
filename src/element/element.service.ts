@@ -3,6 +3,7 @@ import { Connection } from '../connection/entity/connection.entity';
 import ElementDTO from './Element.DTO';
 import ElementRepo from './element.repository';
 import { Element } from './entity/element.entity';
+type ElementDTOorError = ElementDTO | Error;
 //TODO Create custom PIPE to map returned Element to plainObject
 @Injectable()
 export class ElementService {
@@ -28,12 +29,12 @@ export class ElementService {
 
   async createElements(
     elementsDTO: ElementDTO[],
-  ): Promise<ElementDTO[] | Error> {
+  ): Promise<ElementDTOorError[]> {
     const returnDTO: ElementDTO[] = [];
     for (const key in elementsDTO) {
       returnDTO.push(await this.createElement(elementsDTO[key]));
     }
-    return await returnDTO;
+    return returnDTO;
   }
 
   async deleteAllElements(): Promise<Element[]> {

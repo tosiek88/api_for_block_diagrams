@@ -36,7 +36,8 @@ export class ElementController {
 
   @Post()
   public async createElement(@Body() elements: ElementDTO[]) {
-    return await this.elementService.createElements(elements);
+    const req = await this.elementService.createElements(elements);
+    return req;
   }
 
   @Patch(':id')
