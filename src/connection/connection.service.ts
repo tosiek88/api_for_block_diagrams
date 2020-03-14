@@ -29,7 +29,6 @@ export class ConnectionService {
 
   async deleteConnections(): Promise<Connection[]> {
     const allConnections: Connection[] = await this.connectionRepository.find();
-    Logger.log(allConnections);
     return await this.connectionRepository.remove(allConnections);
   }
 }
