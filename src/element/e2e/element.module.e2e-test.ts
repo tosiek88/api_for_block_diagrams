@@ -50,7 +50,7 @@ describe('Element Get TEST', () => {
 
   it('Should check if inserted data are in tested database ', async () => {
     // act
-    const elements: Element[] = await elementService.getAllElement();
+    const elements: ElementDTO[] = await elementService.getAllElement();
     // test
     expect(elements.length).toBeGreaterThan(0);
     expect(elementsDTO.length).toEqual(elements.length);
@@ -68,6 +68,15 @@ describe('Element Get TEST', () => {
     expect(data[1].connections[0]).toBeInstanceOf(Connection);
   });
 
+  it('Should return object by name', async () => {
+    const data = await elementService.getElementByName(elementsDTO[0].name);
+    expect(data).toEqual(elementsDTO[0]);
+  });
+
+  it('Should return error', async () => {
+    const data = await elementService.getElementByName('no Name'); //there is no name in database
+    expect(data).toEqual([]);
+  });
   it(`/GET elements`, async () => {
     const data = await elementService.getAllElement();
     const plainData = classToPlain(data);
@@ -138,7 +147,7 @@ describe(`Element POST TEST`, () => {
     };
     // ACT
     await elementService.createElement(elementDTO);
-    const element: Element[] = await elementService.getAllElement();
+    const element: ElementDTO[] = await elementService.getAllElement();
 
     // Test
     expect(element).toBeInstanceOf(Array);
@@ -244,5 +253,38 @@ describe(`Element POST TEST`, () => {
         expect(res.body[1].message).toBeDefined();
         expect(res.body[1].name).toEqual('ER_DUP_ENTRY'); // DUPLICATE ENTRY
       });
+  });
+
+  it('POST should update obj already exist', async () => {
+    await elementRepository.manager.connection.synchronize(true);
+
+    const elementDTO: ElementDTO[] = [
+      {
+        name: 'Test Element 1',
+        connections: [
+          {
+            label: 'A3289',
+          },
+          {
+            label: 'N2302',
+          },
+        ],
+      },
+      {
+        name: 'Test Element 1',
+        connections: [],
+      },
+    ];
+
+    // const res = await elementService.updateElement();
+
+    // const req = await request(app.getHttpServer())
+    //   .post('/element')
+    //   .send(elementDTO)
+    //   .expect(201)
+    //   .then(async res => {
+    //     Logger.log(res.body[0]);
+    //     Logger.log(res.body[1]);
+    //   });
   });
 });

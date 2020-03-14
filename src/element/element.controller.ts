@@ -20,8 +20,9 @@ import { restElement } from '@babel/types';
 export class ElementController {
   constructor(private readonly elementService: ElementService) {}
   @Get()
-  public async getElement(): Promise<Element[]> {
-    return await this.elementService.getAllElement();
+  public async getElement(@Res() res: Response): Promise<Response> {
+    const result = await this.elementService.getAllElement();
+    return await res.status(HttpStatus.OK).json(result);
   }
 
   @Get(':id')

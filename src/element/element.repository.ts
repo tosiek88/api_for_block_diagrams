@@ -9,6 +9,7 @@ export default class ElementRepo extends Repository<Element> {
   constructor() {
     super();
   }
+
   public async createElement(
     elementDTO: ElementDTO,
   ): Promise<ElementDTO | Error> {
@@ -29,7 +30,6 @@ export default class ElementRepo extends Repository<Element> {
     // });
 
     elementEntity = automapper.map('ElementDTO', 'Element', elementDTO);
-
     try {
       const entity = await this.save([elementEntity]);
       elementDTO.id = entity[0].id;
@@ -40,6 +40,25 @@ export default class ElementRepo extends Repository<Element> {
         name: err.code,
       };
       return error;
+    }
+  }
+
+  public async findOneOverride(
+    findManyOptions?: any,
+  ): Promise<ElementDTO | []> {
+    automapper
+      .createMap('Element', 'ElementDTO')
+      .forAllMembers((dest: any, destProp: string, value: any): void => {
+        dest[destProp] = value;
+      });
+
+    const result = await this.findOne(findManyOptions);
+    let elementDTO = new ElementDTO();
+    elementDTO = automapper.map('Element', 'ElementDTO', result);
+    if (elementDTO === undefined) {
+      return [];
+    } else {
+      return elementDTO;
     }
   }
 }

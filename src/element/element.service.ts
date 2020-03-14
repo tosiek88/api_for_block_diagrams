@@ -3,6 +3,7 @@ import { Connection } from '../connection/entity/connection.entity';
 import ElementDTO from './Element.DTO';
 import ElementRepo from './element.repository';
 import { Element } from './entity/element.entity';
+
 type ElementDTOorError = ElementDTO | Error;
 //TODO Create custom PIPE to map returned Element to plainObject
 @Injectable()
@@ -12,7 +13,7 @@ export class ElementService {
     return 'element';
   }
 
-  async getAllElement(): Promise<Element[]> {
+  async getAllElement(): Promise<ElementDTO[]> {
     const result = await this.elementRepository.find({
       order: {
         id: 'ASC',
@@ -20,6 +21,18 @@ export class ElementService {
       relations: ['connections'],
     }); // TODO should return ElementDTO[]
     return result;
+  }
+
+  async getElementByName(name: string): Promise<ElementDTO | []> {
+    const elementDTO = this.elementRepository.findOneOverride({
+      where: [
+        {
+          name: name,
+        },
+      ],
+      relations: ['connections'],
+    });
+    return elementDTO;
   }
   async createElement(element: ElementDTO): Promise<ElementDTO | Error> {
     // arg of function element is a plain object without constructor so need to be transformed

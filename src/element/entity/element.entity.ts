@@ -22,7 +22,7 @@ export class Element {
     connection => connection.elements,
     {
       onDelete: 'CASCADE',
-      cascade: true,
+      cascade: ['update', 'insert'],
     },
   )
   @JoinTable()
