@@ -1,10 +1,26 @@
 # Description
 
 REST API for Diagram Block. Server should allow for easy manipulation:
--Electrical Drawings
--Hydraulic Drawings
--Mechanical Drawings
--Easy Search by cable, pipe, element, tag name etc.
+<ul>
+  <li>
+     -Electrical Drawings
+  </li>
+
+  <li>
+     -Hydraulic Drawings
+  </li>
+
+  <li>
+    -Mechanical Drawings
+  </li>
+    <li>    
+    -Easy Search by cable, pipe, element, tag name etc.gs
+  </li>
+
+</ul>
+
+
+
 
 For now main focus of application is simple creating, delatating, updating (CRUD)
 elements with many - to - many relations.
