@@ -1,26 +1,31 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
-  ManyToMany,
+  Entity,
   JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { Connection } from '../../connection/entity/connection.entity';
 
 @Entity()
-@Unique(['name'])
+// @Unique(['name'])
 export class Element {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   name: string;
 
-  @ManyToMany(type => Connection, connection => connection.elements, {
-    onDelete: 'CASCADE',
-    cascade: true,
-  })
+  @ManyToMany(
+    type => Connection,
+    connection => connection.elements,
+    {
+      onDelete: 'CASCADE',
+      cascade: ['update', 'insert'],
+      nullable: true,
+    },
+  )
   @JoinTable()
-  connections?: Connection[];
+  connections: Connection[];
 }

@@ -1,34 +1,64 @@
 import { Logger } from '@nestjs/common';
-import { Connection } from '../connection/entity/connection.entity';
-import { Element } from './entity/element.entity';
+import 'automapper-ts';
 import { EntityRepository, Repository } from 'typeorm';
 import ElementDTO from './Element.DTO';
+import { Element } from './entity/element.entity';
 
 @EntityRepository(Element)
 export default class ElementRepo extends Repository<Element> {
-    constructor() {
-        super();
+  constructor() {
+    super();
+  }
+
+  public async createElement(
+    elementDTO: ElementDTO,
+  ): Promise<ElementDTO | Error> {
+    let elementEntity = new Element();
+    automapper
+      .createMap('ConnectionDTO', 'Connection')
+      .forAllMembers((dest: any, destProp: string, value: any): void => {
+        dest[destProp] = value;
+      });
+
+    automapper
+      .createMap('ElementDTO', 'Element')
+      .forAllMembers((dest: any, destProp: string, value: any): void => {
+        dest[destProp] = value;
+      });
+    // .forMember('connections', opt => {
+    //   Logger.log(opt);
+    // });
+
+    elementEntity = automapper.map('ElementDTO', 'Element', elementDTO);
+    try {
+      const entity = await this.save([elementEntity]);
+      elementDTO.id = entity[0].id;
+      return elementDTO;
+    } catch (err) {
+      const error: Error = {
+        message: err.sqlMessage,
+        name: err.code,
+      };
+      return error;
     }
-    // tslint:disable-next-line: no-shadowed-variable
-    public async createElement(elementDTO: ElementDTO): Promise<ElementDTO> {
-        const elementEntity = new Element();
-        elementEntity.name = elementDTO.name;
-        elementEntity.connections = [];
-        if (elementDTO.connections !== undefined) {
-            elementDTO.connections.forEach(it => {
-                const tempConn: Connection = new Connection();
-                tempConn.id = it.id;
-                tempConn.label = it.label;
-                tempConn.elements = [];
+  }
 
-                elementEntity.connections.push(tempConn);
-            });
-        } else {
-            elementDTO.connections = [];
+  public async findOneOverride(
+    findManyOptions?: any,
+  ): Promise<ElementDTO | []> {
+    automapper
+      .createMap('Element', 'ElementDTO')
+      .forAllMembers((dest: any, destProp: string, value: any): void => {
+        dest[destProp] = value;
+      });
 
-        }
-
-        await this.save([elementEntity]);
-        return elementDTO;
+    const result = await this.findOne(findManyOptions);
+    let elementDTO = new ElementDTO();
+    elementDTO = automapper.map('Element', 'ElementDTO', result);
+    if (elementDTO === undefined) {
+      return [];
+    } else {
+      return elementDTO;
     }
+  }
 }
