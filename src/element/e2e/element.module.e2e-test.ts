@@ -228,33 +228,7 @@ describe(`Element POST TEST`, () => {
       });
   });
 
-  // it('POST fail if inserted object will exist in database', async () => {
-  //   await elementRepository.manager.connection.synchronize(true);
-
-  //   const elementDTO: ElementDTO[] = [
-  //     {
-  //       name: 'Test Element 1',
-  //       connections: [],
-  //     },
-  //     {
-  //       name: 'Test Element 1',
-  //       connections: [],
-  //     },
-  //   ];
-
-  //   await request(app.getHttpServer())
-  //     .post('/element')
-  //     .send(elementDTO)
-  //     .expect(201)
-  //     .then(async res => {
-  //       const element = await elementService.getAllElement();
-  //       expect(res.body[0]).toEqual(classToPlain(element[0]));
-  //       expect(res.body[1].message).toBeDefined();
-  //       expect(res.body[1].name).toEqual('ER_DUP_ENTRY'); // DUPLICATE ENTRY
-  //     });
-  // });
-
-  it('POST should update obj already exist', async () => {
+  it('PATCH should update obj already exist', async () => {
     await elementRepository.manager.connection.synchronize(true);
 
     const elementDTO: ElementDTO[] = [
@@ -282,8 +256,7 @@ describe(`Element POST TEST`, () => {
       .expect(201)
       .then(async res => {
         const element = await elementService.getAllElement();
-
-        Logger.log(element);
+        expect(res.body).toEqual(element[0]);
       });
   });
 });
