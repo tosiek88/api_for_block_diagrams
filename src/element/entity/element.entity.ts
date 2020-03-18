@@ -9,10 +9,10 @@ import {
 import { Connection } from '../../connection/entity/connection.entity';
 
 @Entity()
-@Unique(['name'])
+// @Unique(['name'])
 export class Element {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   name: string;
@@ -23,6 +23,7 @@ export class Element {
     {
       onDelete: 'CASCADE',
       cascade: ['update', 'insert'],
+      nullable: true,
     },
   )
   @JoinTable()

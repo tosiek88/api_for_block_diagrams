@@ -11,7 +11,7 @@ import ElementRepo from './../element.repository';
 import { ElementService } from './../element.service';
 import { Element } from './../entity/element.entity';
 import * as sampleData from './test_database.json';
-import { get } from 'http';
+import { response } from 'express';
 require('custom-env').env('test');
 
 const DATABASE = dbConnectionOptions(process.env.ORM_CONFIG_NAME);
@@ -86,7 +86,7 @@ describe('Element Get TEST', () => {
       .expect(200);
   });
 
-  //TODO Test for getAllElement to check if return Connection
+  // TODO Test for getAllElement to check if return Connection
 
   it(`/GET element id=1 should return 200 HttpStatus ok - element id=1 exist`, async () => {
     // Act
@@ -192,7 +192,6 @@ describe(`Element POST TEST`, () => {
       .post('/element')
       .send(elementDTO)
       .expect(201)
-
       .then(async res => {
         const elements = await elementService.getAllElement();
         expect(res.body).toEqual(classToPlain(elements));
@@ -229,31 +228,31 @@ describe(`Element POST TEST`, () => {
       });
   });
 
-  it('POST fail if inserted object will exist in database', async () => {
-    await elementRepository.manager.connection.synchronize(true);
+  // it('POST fail if inserted object will exist in database', async () => {
+  //   await elementRepository.manager.connection.synchronize(true);
 
-    const elementDTO: ElementDTO[] = [
-      {
-        name: 'Test Element 1',
-        connections: [],
-      },
-      {
-        name: 'Test Element 1',
-        connections: [],
-      },
-    ];
+  //   const elementDTO: ElementDTO[] = [
+  //     {
+  //       name: 'Test Element 1',
+  //       connections: [],
+  //     },
+  //     {
+  //       name: 'Test Element 1',
+  //       connections: [],
+  //     },
+  //   ];
 
-    const req = await request(app.getHttpServer())
-      .post('/element')
-      .send(elementDTO)
-      .expect(201)
-      .then(async res => {
-        const element = await elementService.getAllElement();
-        expect(res.body[0]).toEqual(classToPlain(element[0]));
-        expect(res.body[1].message).toBeDefined();
-        expect(res.body[1].name).toEqual('ER_DUP_ENTRY'); // DUPLICATE ENTRY
-      });
-  });
+  //   await request(app.getHttpServer())
+  //     .post('/element')
+  //     .send(elementDTO)
+  //     .expect(201)
+  //     .then(async res => {
+  //       const element = await elementService.getAllElement();
+  //       expect(res.body[0]).toEqual(classToPlain(element[0]));
+  //       expect(res.body[1].message).toBeDefined();
+  //       expect(res.body[1].name).toEqual('ER_DUP_ENTRY'); // DUPLICATE ENTRY
+  //     });
+  // });
 
   it('POST should update obj already exist', async () => {
     await elementRepository.manager.connection.synchronize(true);
@@ -275,16 +274,16 @@ describe(`Element POST TEST`, () => {
         connections: [],
       },
     ];
+    await elementService.createElements([elementDTO[0]]);
 
-    // const res = await elementService.updateElement();
+    await request(app.getHttpServer())
+      .patch('/element')
+      .send(elementDTO[1])
+      .expect(201)
+      .then(async res => {
+        const element = await elementService.getAllElement();
 
-    // const req = await request(app.getHttpServer())
-    //   .post('/element')
-    //   .send(elementDTO)
-    //   .expect(201)
-    //   .then(async res => {
-    //     Logger.log(res.body[0]);
-    //     Logger.log(res.body[1]);
-    //   });
+        Logger.log(element);
+      });
   });
 });

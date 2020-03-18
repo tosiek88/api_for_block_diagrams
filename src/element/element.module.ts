@@ -5,6 +5,7 @@ import { ElementService } from './element.service';
 import { Element } from './entity/element.entity';
 import { Connection } from '../connection/entity/connection.entity';
 import ElementRepo from './element.repository';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([Element, ElementRepo]),

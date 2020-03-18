@@ -1,9 +1,8 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
+  Entity,
   ManyToMany,
-  JoinTable,
+  PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { Element } from '../../element/entity/element.entity';
@@ -12,7 +11,7 @@ import { Element } from '../../element/entity/element.entity';
 @Unique(['label'])
 export class Connection {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   label: string;
