@@ -2,7 +2,7 @@
 @PORT=4000
 @PORT2={{$dotenv PORT}}
 ###For Doom Emacs Rest Client Variables
-:PORT=3000
+:PORT=4000
 ###Simple request 
 GET http://localhost:{{PORT2}/element
 
@@ -11,39 +11,39 @@ GET http://localhost::PORT/element
 
 ###Simple POST test request should return Bad Request from pipes
 
-POST http://localhost:3000/element HTTP/1.1
+POST http://localhost::PORT/element
 Content-Type: application/json
-//This line have to be non written
 
-{
-    "name":"Test 2"
-}
+[{
+    "name":"Test 3",
+    "connection":[]
+}]
 ###Simple POST test request should return Bad Request from pipes
 
-POST http://localhost:3000/element HTTP/1.1
+POST http://localhost::PORT/element HTTP/1.1
 Content-Type: application/json
-//This line have to be non written
 
 {
     "name":"Test",
     "connections":[]
 }
 ###Simple POST test request
-POST http://localhost:3000/element HTTP/1.1
+POST http://localhost::PORT/element
 Content-Type: application/json
-//This line have to be non written
 
-{
-    "name":"Test Switchboard 2",
+[{
+    "name":"Test3",
     "connections":[
         {
-            "label":"A29091" 
+            "label":"A29091",
+            "flow":"input"
         },
         {
-            "label":"N23201"
+            "label":"N23201",
+            "flow":"input"
         }
     ]
-}
+}]
 ###Update 
 PATCH http://localhost:3000/element/19 HTTP/1.1
 Content-Type: application/json
@@ -56,7 +56,7 @@ Content-Type: application/json
 DELETE  http://localhost:3000/element/2
 
 ### Delete all
-DELETE   http://localhost:3000/element/
+DELETE http://localhost:4000/element/
 
 //--------------Connection Entity -------
 ###Home Request
@@ -76,7 +76,7 @@ Content-Type: application/json
 }
 
 ###Delete Testing Connection
-DELETE http://localhost:3000/connection/
+DELETE http://localhost::PORT/connection/
 
 ###Clean up
 

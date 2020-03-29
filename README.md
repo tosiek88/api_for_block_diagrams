@@ -1,10 +1,24 @@
 # Description
 
 REST API for Diagram Block. Server should allow for easy manipulation:
--Electrical Drawings
--Hydraulic Drawings
--Mechanical Drawings
--Easy Search by cable, pipe, element, tag name etc.
+
+<ul>
+  <li>
+     -Electrical Drawings
+  </li>
+
+  <li>
+     -Hydraulic Drawings
+  </li>
+
+  <li>
+    -Mechanical Drawings
+  </li>
+    <li>    
+    -Easy Search by cable, pipe, element, tag name etc.gs
+  </li>
+
+</ul>
 
 For now main focus of application is simple creating, delatating, updating (CRUD)
 elements with many - to - many relations.
@@ -29,7 +43,7 @@ driven desing, and Onion Architecure, so there is several layers:
 For better scaling I am considering to use auto mapper to automatically map
 DTO-Entity.
 
-All e2e test currently are against Database (MySQL), because I would like to be
+All e2e tests currently are against Database (MySQL), because I would like to be
 sure that all operation between database and repository are correct.
 Especially Cascade Removing.
 
