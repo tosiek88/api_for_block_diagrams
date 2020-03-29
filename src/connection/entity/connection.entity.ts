@@ -20,7 +20,7 @@ export class Connection {
     flow: 'input' | 'output';
     @ManyToMany(
         type => Element,
-        element => element.connections,
+        element => element.in,
         {
             onDelete: 'CASCADE',
         },

@@ -75,13 +75,13 @@ export class ElementService {
             const response = await this.elementRepository.save<Element>({
                 id: el.id,
                 name: element.name,
-                connections: [],
+                in: [],
             });
 
             return {
                 id: response.id,
                 name: response.name,
-                connections: response.connections,
+                connections: response.in,
             };
         } catch (e) {
             // Do something
@@ -92,7 +92,7 @@ export class ElementService {
         const el: Element = await this.getElementAt(element.id);
         // check if connection is already in database
 
-        await el.connections.push(connection);
+        await el.in.push(connection);
         this.updateElement(el);
     }
 
