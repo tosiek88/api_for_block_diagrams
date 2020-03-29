@@ -43,7 +43,7 @@ export class ElementService {
     async createElements(
         elementsDTO: ElementDTO[],
     ): Promise<ElementDTOorError[]> {
-        Logger.log(elementsDTO, `CreateElements`);
+        // Logger.log(elementsDTO, `CreateElements`);
         const returnDTO: ElementDTO[] = [];
         for (const key in elementsDTO) {
             // Logger.log(
