@@ -16,11 +16,16 @@ export class Connection {
     @Column()
     label: string;
 
-    @Column()
-    flow: 'input' | 'output';
     @ManyToMany(
         type => Element,
-        element => element.connections,
+        element => element.input,
+        {
+            onDelete: 'CASCADE',
+        },
+    )
+    @ManyToMany(
+        type => Element,
+        element => element.output,
         {
             onDelete: 'CASCADE',
         },

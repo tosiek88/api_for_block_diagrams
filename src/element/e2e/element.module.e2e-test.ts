@@ -1,4 +1,4 @@
-import { INestApplication, Logger } from '@nestjs/common';
+import { Logger, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { classToPlain } from 'class-transformer';
@@ -31,23 +31,25 @@ describe('Element Get TEST', () => {
             controllers: [ElementController],
             providers: [ElementService],
         }).compile();
-        app = await module.createNestApplication();
+        app = module.createNestApplication();
         await app.init();
         elementService = module.get<ElementService>(ElementService);
         elementRepository = module.get<ElementRepo>(ElementRepo);
         elementsDTO = getSampleData(sampleData);
-        await elementService.createElements(elementsDTO);
+        // Logger.log(elementsDTO);
+        const res = await elementService.createElements(elementsDTO);
+        // Logger.log(res);
     });
 
-    it('Check if Service Element is defined', async () => {
+    it('Check if Service Element is definputed', async () => {
         expect(elementService).toBeDefined();
     });
 
-    it('Check if Repository Element is defined', async () => {
+    it('Check if Repository Element is definputed', async () => {
         expect(elementRepository).toBeDefined();
     });
 
-    it('Should check if inserted data are in tested database ', async () => {
+    it('Should check if inserted data are input tested database ', async () => {
         // act
         const elements: ElementDTO[] = await elementService.getAllElement();
         // test
@@ -63,8 +65,8 @@ describe('Element Get TEST', () => {
         expect(data).toBeDefined();
         expect(data).toBeInstanceOf(Array);
         expect(data[1]).toBeInstanceOf(Element);
-        expect(data[1].connections).toBeInstanceOf(Array);
-        expect(data[1].connections[0]).toBeInstanceOf(Connection);
+        expect(data[1].input).toBeInstanceOf(Array);
+        expect(data[1].input[0]).toBeInstanceOf(Connection);
     });
 
     it('Should return object by name', async () => {
@@ -73,15 +75,15 @@ describe('Element Get TEST', () => {
     });
 
     it('Should return error', async () => {
-        const data = await elementService.getElementByName('no Name'); //there is no name in database
+        const data = await elementService.getElementByName('no Name'); //there is no name input database
         expect(data).toEqual([]);
     });
     it(`/GET elements`, async () => {
         const data = await elementService.getAllElement();
-        const plainData = classToPlain(data);
+        const plainputData = classToPlain(data);
         return await request(app.getHttpServer())
             .get('/element')
-            .expect(plainData)
+            .expect(plainputData)
             .expect(200);
     });
 
@@ -90,11 +92,11 @@ describe('Element Get TEST', () => {
     it(`/GET element id=1 should return 200 HttpStatus ok - element id=1 exist`, async () => {
         // Act
         const data = await elementService.getElementAt(1);
-        const plainData = classToPlain(data);
+        const plainputData = classToPlain(data);
         // Test
         await request(app.getHttpServer())
             .get('/element/1')
-            .expect(plainData)
+            .expect(plainputData)
             .expect(200);
     });
 
@@ -126,7 +128,7 @@ describe(`Element POST TEST`, () => {
             controllers: [ElementController],
             providers: [ElementService],
         }).compile();
-        app = await module.createNestApplication();
+        app = module.createNestApplication();
         await app.init();
 
         elementService = module.get<ElementService>(ElementService);
@@ -142,7 +144,8 @@ describe(`Element POST TEST`, () => {
         // Arrange
         const elementDTO: ElementDTO = {
             name: 'Test Element',
-            connections: [],
+            input: [],
+            output: [],
         };
         // ACT
         await elementService.createElement(elementDTO);
@@ -153,11 +156,12 @@ describe(`Element POST TEST`, () => {
         expect(element[0].name).toEqual(elementDTO.name);
     });
 
-    it('POST should create element and return in body ', async () => {
+    it('POST should create element and return input body ', async () => {
         const elementDTO: ElementDTO[] = [
             {
                 name: 'Test Element 2',
-                connections: [],
+                input: [],
+                output: [],
             },
         ];
 
@@ -168,7 +172,7 @@ describe(`Element POST TEST`, () => {
             .then(async res => {
                 const element = await elementRepository.findOne({
                     where: { name: elementDTO[0].name },
-                    relations: ['connections'],
+                    relations: ['input', 'output'],
                 });
                 expect(res.body).toEqual([element]);
             });
@@ -179,11 +183,13 @@ describe(`Element POST TEST`, () => {
         const elementDTO: ElementDTO[] = [
             {
                 name: 'Test Element 2',
-                connections: [],
+                input: [],
+                output: [],
             },
             {
                 name: 'Test Element 1',
-                connections: [],
+                input: [],
+                output: [],
             },
         ];
 
@@ -202,7 +208,7 @@ describe(`Element POST TEST`, () => {
         const elementDTO: ElementDTO[] = [
             {
                 name: 'Test Element 2',
-                connections: [
+                input: [
                     {
                         label: 'Axxxxx',
                     },
@@ -210,10 +216,12 @@ describe(`Element POST TEST`, () => {
                         label: 'Nxxxxx',
                     },
                 ],
+                output: [],
             },
             {
                 name: 'Test Element 1',
-                connections: [],
+                input: [],
+                output: [],
             },
         ];
 
@@ -233,7 +241,7 @@ describe(`Element POST TEST`, () => {
         const elementDTO: ElementDTO[] = [
             {
                 name: 'Test Element 1',
-                connections: [
+                input: [
                     {
                         label: 'A3289',
                     },
@@ -241,14 +249,21 @@ describe(`Element POST TEST`, () => {
                         label: 'N2302',
                     },
                 ],
+                output: [
+                    {
+                        label: 'A3231',
+                    },
+                ],
             },
             {
                 name: 'Test Element 1',
-                connections: [],
+                input: [],
+                output: [],
             },
         ];
-        await elementService.createElements([elementDTO[0]]);
+        const res = await elementService.createElements([elementDTO[0]]);
 
+        const elements = await elementService.getAllElement();
         await request(app.getHttpServer())
             .patch('/element')
             .send(elementDTO[1])

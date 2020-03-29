@@ -17,7 +17,7 @@ export class ElementService {
             order: {
                 id: 'ASC',
             },
-            relations: ['connections'],
+            relations: ['input', 'output'],
         }); // TODO should return ElementDTO[]
         return result;
     }
@@ -29,7 +29,7 @@ export class ElementService {
                     name: name,
                 },
             ],
-            relations: ['connections'],
+            relations: ['input', 'output'],
         });
         return elementDTO;
     }
@@ -75,13 +75,15 @@ export class ElementService {
             const response = await this.elementRepository.save<Element>({
                 id: el.id,
                 name: element.name,
-                connections: [],
+                input: [],
+                output: [],
             });
 
             return {
                 id: response.id,
                 name: response.name,
-                connections: response.connections,
+                input: response.input,
+                output: response.output,
             };
         } catch (e) {
             // Do something
@@ -92,7 +94,7 @@ export class ElementService {
         const el: Element = await this.getElementAt(element.id);
         // check if connection is already in database
 
-        await el.connections.push(connection);
+        await el.input.push(connection);
         this.updateElement(el);
     }
 

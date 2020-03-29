@@ -29,11 +29,11 @@ export default class ElementRepo extends Repository<Element> {
         elementEntity = automapper.map('ElementDTO', 'Element', elementDTO);
         try {
             const entity = await this.save([elementEntity]);
-            Logger.log(entity, `AUTOMAPPER Create Element`);
+            // Logger.log(entity, `AUTOMAPPER Create Element`);
             elementDTO.id = entity[0].id;
             return elementDTO;
         } catch (err) {
-            Logger.log(`AUTOMAPPER Throw`);
+            // Logger.log(`AUTOMAPPER Throw`);
             const error: Error = {
                 message: err.sqlMessage,
                 name: err.code,
