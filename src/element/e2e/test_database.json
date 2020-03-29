@@ -2,18 +2,17 @@
   {
     "name": "LV Switchboard nb 2",
     "id": 1,
-    "connections": []
+    "input": [],
+    "output": [{ "id": 2, "label": "N2321" }]
   },
 
   {
     "name": "LV Switchboard nb 1",
     "id": 2,
-      "connections": [
-
-          {"id":1, "label":"A29102"},
-          {"id":2, "label":"N2321"}
-      ]
+    "input": [
+      { "id": 1, "label": "A29102" },
+      { "id": 2, "label": "N2321" }
+    ],
+    "output": [{ "id": 3, "label": "" }]
   }
-
-
 ]

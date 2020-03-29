@@ -4,7 +4,6 @@ import {
     JoinTable,
     ManyToMany,
     PrimaryGeneratedColumn,
-    Unique,
 } from 'typeorm';
 import { Connection } from '../../connection/entity/connection.entity';
 
@@ -19,7 +18,7 @@ export class Element {
 
     @ManyToMany(
         type => Connection,
-        connection => connection.elements,
+        input => input.elements,
         {
             onDelete: 'CASCADE',
             cascade: ['update', 'insert'],
@@ -27,8 +26,17 @@ export class Element {
         },
     )
     @JoinTable()
-    in: Connection[];
+    input: Connection[];
 
+    @ManyToMany(
+        type => Connection,
+        output => output.elements,
+        {
+            onDelete: 'CASCADE',
+            cascade: ['update', 'insert'],
+            nullable: true,
+        },
+    )
     @JoinTable()
-    out: Connection[];
+    output: Connection[];
 }

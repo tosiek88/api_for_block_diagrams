@@ -17,7 +17,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "NODE_ENV=test jest --watch --config ./jest-e2e.config.js --detectOpenHandles"
+    "test:e2e": "NODE_ENV=test jest --watch --config ./jest-e2e.config.js --detectOpenHandles --bail"
   },
   "dependencies": {
     "@nestjs/common": "^6.11.11",
@@ -54,11 +54,7 @@
     "typescript": "^3.8.3"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
+    "moduleFileExtensions": ["js", "json", "ts"],
     "rootDir": "src",
     "testRegex": ".spec.ts$",
     "transform": {
